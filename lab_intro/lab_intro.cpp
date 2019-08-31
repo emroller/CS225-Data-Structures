@@ -62,9 +62,9 @@ PNG grayscale(PNG image) {
  */
 PNG createSpotlight(PNG image, int centerX, int centerY) {
 	for (unsigned int x = 0; x < image.width(); x++) {
-		for (unsigned int y; y < image.height; y++) {
+		for (unsigned int y = 0; y < image.height(); y++) {
 			HSLAPixel &pixel = image.getPixel(x,y);
-			double distance = sqrt((pixel.x * pixel.x) + (pixel.y * pixel.y));
+			double distance = sqrt(((x - centerX) * (x - centerX)) + (y - centerY) * (y - centerY));
 			if (distance > 160) {
 				pixel.l = .2 * pixel.l;
 			} else {
@@ -118,13 +118,11 @@ PNG illinify(PNG image) {
 PNG watermark(PNG firstImage, PNG secondImage) {
  for (unsigned x = 0; x <secondImage.width(); x++) {
     for (unsigned y = 0; y < secondImage.height(); y++) {
-         HSLAPixel & pixel =secondImage.getPixel(x,y);
-	 if (pixel.l  == 1 && x <= firstImage.width && y <= firstImage.height) {
-		HSLAPixel& firstImagePixel = firstImage.getPixel(x,y);
-		firstImagePixel.l += .2;
+        // HSLAPixel & pixel = secondImage.getPixel(x,y);
+	 HSLAPixel& firstImagePixel = firstImage.getPixel(x,y);
+	 firstImagePixel.l += .2;
 	}		
-
-    }
  }
   return firstImage;
-}
+ }
+
