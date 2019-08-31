@@ -63,12 +63,16 @@ PNG grayscale(PNG image) {
 PNG createSpotlight(PNG image, int centerX, int centerY) {
 	for (unsigned int x = 0; x < image.width(); x++) {
 		for (unsigned int y = 0; y < image.height(); y++) {
+			
 			HSLAPixel &pixel = image.getPixel(x,y);
 			double distance = sqrt(((x - centerX) * (x - centerX)) + (y - centerY) * (y - centerY));
-			if (distance > 160) {
-				pixel.l = .2 * pixel.l;
+			//don't modify the center pixel
+			if ((int) x == centerX && (int) y == centerY) {
+				//do nothing
+			} else if (distance <=  160) {
+				pixel.l = pixel.l * (1 - (distance * .005));
 			} else {
-				pixel.l = distance * .5 * pixel.l;
+				pixel.l = .2 * pixel.l;
 			}
 		}
 	}
@@ -88,14 +92,14 @@ PNG createSpotlight(PNG image, int centerX, int centerY) {
  * @return The illinify'd image.
 **/
 PNG illinify(PNG image) {
-  for (unsigned x = 0; x < image.width(); x++) {
-    for (unsigned y = 0; y < image.height(); y++) {
+  for (unsigned int x = 0; x < image.width(); x++) {
+    for (unsigned int y = 0; y < image.height(); y++) {
 	 HSLAPixel & pixel = image.getPixel(x, y);
-	// TODO: THIS ISN'T CORRECT FIX IT
-	if (abs(11-pixel.h) < abs(216-pixel.h)) {
-		pixel.h = 11;
-	} else {
-		pixel.h = 216;
+	// if the pixel hue is exactly in between 11 and 216, set it to orange
+	if (pixel.h <= 113.5 || pixel.h >= 293.5) {
+		pixel.h = 11.0;	
+	} else if (pixel.h > 113.5 && pixel.h < 293.5) {
+		pixel.h = 216.0;
 	}
     }
   } 
@@ -118,11 +122,16 @@ PNG illinify(PNG image) {
 PNG watermark(PNG firstImage, PNG secondImage) {
  for (unsigned x = 0; x <secondImage.width(); x++) {
     for (unsigned y = 0; y < secondImage.height(); y++) {
-        // HSLAPixel & pixel = secondImage.getPixel(x,y);
-	 HSLAPixel& firstImagePixel = firstImage.getPixel(x,y);
-	 firstImagePixel.l += .2;
-	}		
+        HSLAPixel& secondImPixel = secondImage.getPixel(x,y);
+	if (x <= firstImage.width() && y <= firstImage.height()) {
+	    HSLAPixel& firstImPixel = firstImage.getPixel(x,y);
+		if (secondImPixel.l == 1) {
+			firstImPixel.l += .2;
+	 	}	
+	}
+     }		
  }
+
   return firstImage;
  }
 
