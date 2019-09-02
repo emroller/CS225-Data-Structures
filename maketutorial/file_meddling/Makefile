@@ -15,7 +15,7 @@ delete_file :
 	rm *_file*
 
 open_file :
-	gedit another_silly_file
+	vi another_silly_file
 
 clean : 
 	touch junk1 junk2 junk3 junk4 junk5
