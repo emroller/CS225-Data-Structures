@@ -6,7 +6,7 @@ LD = clang++
 LDFLAGS = -std=c++1y -stdlib=libc++ -lc++abi -lm
 
 # all: $(EXENAME)
-intro: intro.o main.o
+intro: intro.o main.o cs225/HSLAPixel.o cs225/PNG.o lodepng.o
 	$(CXX) intro.o main.o -o intro
 
 intro.o: intro.cpp intro.h
@@ -24,4 +24,3 @@ PNG.o : cs225/PNG.cpp cs225/PNG.h cs225/HSLAPixel.h cs225/lodepng/lodepng.h
 lodepng.o : cs225/lodepng/lodepng.cpp cs225/lodepng/lodepng.h
 	$(CXX) $(CXXFLAGS) cs225/lodepng/lodepng.cpp
 
-# No rule to make target `cs225/PNG.H', needed by `main.o'

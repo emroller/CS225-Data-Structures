@@ -6,6 +6,7 @@
 
 void rotate(std::string inputFile, std::string outputFile) {
   // TODO: Part 2
+
 }
 
 cs225::PNG myArt(unsigned int width, unsigned int height) {
