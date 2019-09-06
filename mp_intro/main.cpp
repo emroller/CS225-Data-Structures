@@ -4,8 +4,6 @@
 #include "intro.h"
 #include "cs225/PNG.h"
 
-#include <iostream>
-#include <stdlib.h>
 
 int main(int argc, char *argv[]) {
   if (argc == 2) {

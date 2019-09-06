@@ -6,6 +6,8 @@
 
 void rotate(std::string inputFile, std::string outputFile) {
   // TODO: Part 2
+  cs225::PNG input_image;
+  input_image.readFromFile(inputFile);
 
 }
 

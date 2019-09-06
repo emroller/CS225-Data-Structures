@@ -152,7 +152,7 @@ namespace cs225 {
   }
 
   bool PNG::writeToFile(string const & fileName) {
-    unsigned char *byteData = new unsigned char[width_ * height_ * 4];
+    unsigned char *byteData = new unsigned char[width_ * height_ *4];
 
     for (unsigned i = 0; i < width_ * height_; i++) {
       hslaColor hsl;
