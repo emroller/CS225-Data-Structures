@@ -24,12 +24,20 @@ endif
 else
 CLANG_VERSION_MSG = $(warning $(ccyellow) Looks like you are not on EWS. Be sure to test on EWS before the deadline. $(ccend))
 endif
+output_msg: ; $(CLANG_VERSION_MSG)
 
-.PHONY: all output_msg
+# be sure to add output_msg as dependency target for your `intro` binary
+
+test: output_msg tests.o PNG.o HSLAPixel.o lodepng.o intro.o
+	$(LD) tests.o PNG.o HSLAPixel.o lodepng.o intro.o $(LDFLAGS) -o test
+
+tests.o: tests/tests.cpp tests/catch.hpp cs225/PNG.h cs225/HSLAPixel.h
+	$(CXX) $(CXXFLAGS) tests/tests.cpp
  
+.PHONY: output_msg
+
 all: $(EXENAME)
 
-output_msg: ; $(CLANG_VERSION_MSG)
 
 $(EXENAME): $(OBJS)
 	$(LD) $(OBJS) $(LDFLAGS) -o $(EXENAME)
