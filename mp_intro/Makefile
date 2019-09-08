@@ -1,4 +1,4 @@
-EXENAME = mp_intro
+EXENAME = intro
 OBJS = main.o PNG.o HSLAPixel.o lodepng.o intro.o
 
 CXX = clang++

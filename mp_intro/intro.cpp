@@ -18,11 +18,12 @@ std::cout << "here!" << std::endl;
 
   unsigned int width = input_image.width();
   unsigned int height = input_image.height();
-
+std::cout << "here2!" << std::endl;
   for (unsigned int x = 0; x < width; x++) {
     for (unsigned int y = 0; y < height; y++) {
+	std::cout << x << ", " << y << std::endl;
 	HSLAPixel& pixel = output_image.getPixel(x,y);
-	HSLAPixel new_pixel = input_image.getPixel(width-x, height-y);
+	HSLAPixel new_pixel = input_image.getPixel(width-x-1, height-y-1);
 	
 	// directly accessing pixel
 	// change each value of the current pixel to the rotated value
@@ -34,9 +35,6 @@ std::cout << "here!" << std::endl;
     }
   
 }
-  std::cout << "file length " << outputFile.size() << std::endl;
-  std::cout << "width: " << output_image.width() << std::endl;
-  std::cout << "height: " << output_image.height() << std::endl;
   output_image.writeToFile(outputFile); 
 }
 
