@@ -1,13 +1,13 @@
 #include "cs225/PNG.h"
 #include "cs225/HSLAPixel.h"
 
+#include <cstdlib>
 #include <string>
 
 using namespace cs225;
 
 void rotate(std::string inputFile, std::string outputFile) {
   // TODO: Part 2
-std::cout << "here!" << std::endl; 
   // we need one PNG to read pixel values from (without modifying)...
   PNG input_image;
   input_image.readFromFile(inputFile);
@@ -18,10 +18,8 @@ std::cout << "here!" << std::endl;
 
   unsigned int width = input_image.width();
   unsigned int height = input_image.height();
-std::cout << "here2!" << std::endl;
   for (unsigned int x = 0; x < width; x++) {
     for (unsigned int y = 0; y < height; y++) {
-	std::cout << x << ", " << y << std::endl;
 	HSLAPixel& pixel = output_image.getPixel(x,y);
 	HSLAPixel new_pixel = input_image.getPixel(width-x-1, height-y-1);
 	
@@ -31,17 +29,36 @@ std::cout << "here2!" << std::endl;
 	pixel.h = new_pixel.h;
 	pixel.a = new_pixel.a;
 	pixel.l = new_pixel.l;
-
-    }
-  
+    }  
 }
   output_image.writeToFile(outputFile); 
 }
 
-
 cs225::PNG myArt(unsigned int width, unsigned int height) {
   cs225::PNG png(width, height);
   // TODO: Part 3
+  for (unsigned int x = 0; x < width; x++) {
+    for (unsigned int y = 0; y < height; y++) {
+	HSLAPixel& pixel = png.getPixel(x,y);
+	if (x == 1) {
+	  pixel.h = 30;
+	  pixel.s = .5;
+	  pixel.l = .5;
+	  pixel.a = 1;
+	} else if (x==2) {
+	  pixel.h = 170;
+          pixel.s = .9;
+          pixel.l = .9;
+          pixel.a = 1;
+	} else {
+	  pixel.h = 300;
+          pixel.s = .2;
+          pixel.l = .2;
+          pixel.a = 1;
+	}
+    }
+  }  
 
-  return png;
+return png;
 }
+

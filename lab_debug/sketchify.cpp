@@ -52,7 +52,7 @@ void sketchify(std::string inputFile, std::string outputFile) {
 	for (unsigned x = 1; x < 900; x++) {
 	// Calculate the pixel difference
             HSLAPixel& prev = original->getPixel(x - 1, y - 1);
-	    HSLAPixel& curr = original->getPixel(x, y);
+	    HSLAPixel& curr = original->getPixel(x-1, y-1);
 	    double diff = std::fabs(curr.h - prev.h);
     	    
 	    // If the pixel is an edge pixel,
