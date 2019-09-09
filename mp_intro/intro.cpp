@@ -40,21 +40,31 @@ cs225::PNG myArt(unsigned int width, unsigned int height) {
   for (unsigned int x = 0; x < width; x++) {
     for (unsigned int y = 0; y < height; y++) {
 	HSLAPixel& pixel = png.getPixel(x,y);
-	if (x == 1) {
-	  pixel.h = 30;
-	  pixel.s = .5;
-	  pixel.l = .5;
-	  pixel.a = 1;
-	} else if (x==2) {
-	  pixel.h = 170;
-          pixel.s = .9;
-          pixel.l = .9;
-          pixel.a = 1;
+	if ( 0 < x <= width/5) {
+	  pixel.h = rand() % 361;
+	  pixel.s = rand() % 1;
+	  pixel.l = rand() % 1;
+	  pixel.a = rand() % 1;
+	} else if (width/5 < x <= (2 * width/5)) {
+	  pixel.h = rand() % 361;
+          pixel.s = rand() % 1;
+          pixel.l = rand() % 1;
+          pixel.a = rand() % 1;
+        } else if (2*width/5 < x <= 3 * width/5) {
+	  pixel.h = rand() % 361;
+          pixel.s = rand() % 1;
+          pixel.l = rand() % 1;
+          pixel.a = rand() % 1;
+        } else if (3*width/5 < x <= 4 * width/5) {
+	  pixel.h = rand() % 361;
+          pixel.s = rand() % 1;
+          pixel.l = rand() % 1;
+          pixel.a = rand() % 1;
 	} else {
-	  pixel.h = 300;
-          pixel.s = .2;
-          pixel.l = .2;
-          pixel.a = 1;
+	  pixel.h = rand() % 361;
+          pixel.s = rand() % 1;
+          pixel.l = rand() % 1;
+          pixel.a = rand() % 1;
 	}
     }
   }  
