@@ -31,7 +31,19 @@ using std::vector;
    }
 
    void Image::darken(double amount) {
-     //     this.l
+     unsigned w = this->width();
+     unsigned h = this->height();
+
+     for (unsigned x = 0; x < w; x++) {
+       for (unsigned y = 0; y < h; y++) {
+	 cs225:: HSLAPixel & pixel = this->getPixel(x,y);
+         if (pixel.l < amount) {
+           pixel.l = 0;
+         } else {
+           pixel.l -= amount;
+         }
+       }
+     }
    }
 
    void Image::desaturate() {
