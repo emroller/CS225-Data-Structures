@@ -20,7 +20,6 @@ Allocator::~Allocator() {
 
 Allocator::Allocator(const std::string& studentFile, const std::string& roomFile)
 {
-    roomCount = fileio::getNumRooms();
     createLetterGroups();
     loadStudents(studentFile);
     loadRooms(roomFile);
@@ -52,6 +51,7 @@ void Allocator::loadRooms(const std::string& file)
 {
     // Read in rooms
     fileio::loadRooms(file);
+    roomCount = fileio::getNumRooms();
     rooms = new Room[roomCount];
 
     totalCapacity = 0;

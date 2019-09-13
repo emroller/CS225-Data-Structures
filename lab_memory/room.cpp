@@ -10,7 +10,7 @@ Room::Room()
     : capacity(0), count(0), max_letters(26), letters(NULL), letterCount(0)
 
 {
-	letters = new Letter[max_letters];
+	//letters = new Letter[max_letters];
 }
 
 
@@ -53,7 +53,6 @@ int Room::spaceRemaining()
 {
     return capacity - count;
 }
-
 void Room::print(std::ostream & stream /* = std::cout */)
 {
     stream << name << " (" << count << "/" << capacity << "):";
@@ -61,14 +60,12 @@ void Room::print(std::ostream & stream /* = std::cout */)
         stream << " " << letters[L].letter;
     stream << std::endl;
 }
-
 void Room::clear()
 {
     if (letters != NULL)
 	//delete rooms;
         delete[] letters;
 }
-
 void Room::copy(const Room& other)
 {
     this->name = other.name;
@@ -77,6 +74,7 @@ void Room::copy(const Room& other)
     this->letterCount = other.letterCount;
     this->max_letters = other.max_letters;
     this->letters = new Letter[max_letters];
+    
     for (int i = 0; i < max_letters; i++) {
       letters[i] = other.letters[i];
     }
