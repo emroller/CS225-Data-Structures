@@ -17,6 +17,7 @@
 class Allocator
 {
   public:
+    ~Allocator();
     /**
      * Creates an Allocator object based on a list of students and a
      *  list of rooms.

@@ -11,8 +11,16 @@
 #include "allocator.h"
 #include "fileio.h"
 
+Allocator::~Allocator() {
+    if (rooms != NULL && alpha != NULL) {
+	delete[] rooms;
+	delete[] alpha;
+    }
+}
+
 Allocator::Allocator(const std::string& studentFile, const std::string& roomFile)
 {
+    roomCount = fileio::getNumRooms();
     createLetterGroups();
     loadStudents(studentFile);
     loadRooms(roomFile);
@@ -48,10 +56,10 @@ void Allocator::loadRooms(const std::string& file)
 
     totalCapacity = 0;
     int i = 0;
-    while (fileio::areMoreRooms()) {
-        i++; 
+    while (fileio::areMoreRooms()) { 
         rooms[i] = fileio::nextRoom();
         totalCapacity += rooms[i].capacity;
+	i++;
     }
 }
 

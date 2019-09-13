@@ -8,8 +8,11 @@
 
 Room::Room()
     : capacity(0), count(0), max_letters(26), letters(NULL), letterCount(0)
+
 {
+	letters = new Letter[max_letters];
 }
+
 
 Room::Room(const std::string& init_name, int init_capacity)
     : name(init_name),
@@ -37,7 +40,7 @@ Room& Room::operator=(const Room& other)
 
 Room::~Room()
 {
-    clear();
+	clear();
 }
 
 void Room::addLetter(const Letter& L)
@@ -62,16 +65,19 @@ void Room::print(std::ostream & stream /* = std::cout */)
 void Room::clear()
 {
     if (letters != NULL)
-
-        delete letters;
+	//delete rooms;
+        delete[] letters;
 }
 
 void Room::copy(const Room& other)
 {
-    name = other.name;
-    capacity = other.capacity;
-    count = other.count;
-    letterCount = other.letterCount;
-    letters = other.letters;
-
+    this->name = other.name;
+    this->capacity = other.capacity;
+    this->count = other.count;
+    this->letterCount = other.letterCount;
+    this->max_letters = other.max_letters;
+    this->letters = new Letter[max_letters];
+    for (int i = 0; i < max_letters; i++) {
+      letters[i] = other.letters[i];
+    }
 }
