@@ -33,7 +33,7 @@ using std::vector;
      for (unsigned x = 0; x < this->width(); x++) {
        for (unsigned y = 0; y < this->height(); y++) {
 	 cs225:: HSLAPixel & pixel = this->getPixel(x,y);
-         if (pixel.l < amount) {
+         if (pixel.l - amount < 0) {
            pixel.l = 0;
          } else {
            pixel.l -= amount;
@@ -61,7 +61,7 @@ using std::vector;
      for (unsigned x = 0; x < this->width(); x++) {
        for (unsigned y = 0; y < this->height(); y++) {
 	 cs225:: HSLAPixel & pixel = this->getPixel(x,y);
-         if (pixel.s < amount) {
+         if (pixel.s - amount < 0) {
            pixel.s = 0;
          } else {
            pixel.s -= amount;
@@ -74,7 +74,7 @@ using std::vector;
    void Image::grayscale() {
      for (unsigned x = 0; x < this->width(); x++) {
        for (unsigned y = 0; y < this->height(); y++) {
-	 HSLAPixel & pixel = image.getPixel(x, y);
+	 cs225:: HSLAPixel & pixel = this->getPixel(x, y);
 	 pixel.s = 0;
        }
      }
@@ -83,7 +83,7 @@ using std::vector;
    void Image::illinify() {
      for (unsigned int x = 0; x < this->width(); x++) {
        for (unsigned int y = 0; y < this->height(); y++) {
-	 HSLAPixel & pixel = this->getPixel(x, y);
+	 cs225::HSLAPixel & pixel = this->getPixel(x, y);
 	 // if the pixel hue is exactly in between 11 and 216, set it to orange
 	 if (pixel.h <= 113.5 || pixel.h >= 293.5) {
 	   pixel.h = 11.0;
@@ -95,12 +95,43 @@ using std::vector;
    }
 
    void Image::lighten() {
+     for (unsigned x = 0; x < this->width(); x++) {
+       for (unsigned y = 0; y < this->height(); y++) {
+	 cs225:: HSLAPixel & pixel = this->getPixel(x,y);
+         if (pixel.l > 0.9) {
+           pixel.l = 1.0;
+         } else {
+           pixel.l += 0.1;
+         }
+       }
+     }
+
    }
 
    void Image::lighten(double amount) {
+     for (unsigned x = 0; x < this->width(); x++) {
+       for (unsigned y = 0; y < this->height(); y++) {
+	 cs225:: HSLAPixel & pixel = this->getPixel(x,y);
+         if (pixel.l + amount > 1.0) {
+           pixel.l = 1.0;
+         } else {
+           pixel.l += amount;
+         }
+       }
+     }
    }
 
    void Image::rotateColor(double degrees) {
+     for (unsigned x = 0; x < this->width(); x++) {
+       for (unsigned y = 0; y < this->height(); y++) {
+	 cs225:: HSLAPixel & pixel = this->getPixel(x,y);
+	 if (pixel.h + degrees > 360) {
+				//do math
+	 } else {
+	   pixel.h += degrees;
+	 }
+       }
+     }
    }
 
    void Image::saturate() {
