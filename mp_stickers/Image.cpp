@@ -125,19 +125,43 @@ using std::vector;
      for (unsigned x = 0; x < this->width(); x++) {
        for (unsigned y = 0; y < this->height(); y++) {
 	 cs225:: HSLAPixel & pixel = this->getPixel(x,y);
-	 if (pixel.h + degrees > 360) {
-				//do math
+	 if (pixel.h + degrees < 0) {
+	    pixel.h = 360 + (pixel.h + degrees);
+	 } else if (pixel.h + degrees > 360) {
+	    pixel.h = (pixel.h + degrees) - 360;
 	 } else {
-	   pixel.h += degrees;
+	    pixel.h += degrees;
 	 }
        }
      }
    }
 
    void Image::saturate() {
+   for (unsigned x = 0; x < this->width(); x++) {
+       for (unsigned y = 0; y < this->height(); y++) {
+         cs225:: HSLAPixel & pixel = this->getPixel(x,y);
+         if (pixel.s > 0.9) {
+           pixel.s = 1.0;
+         } else {
+           pixel.s +=0.1;
+         }
+       }
+     }
+
    }
 
    void Image::saturate(double amount) {
+   for (unsigned x = 0; x < this->width(); x++) {
+       for (unsigned y = 0; y < this->height(); y++) {
+         cs225:: HSLAPixel & pixel = this->getPixel(x,y);
+         if (pixel.s + amount > 1.0) {
+           pixel.s = 1.0;
+         } else {
+           pixel.s += amount;
+         }
+       }
+     }
+
    }
 
    void Image::scale(double factor) {

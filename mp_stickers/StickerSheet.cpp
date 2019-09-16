@@ -1,4 +1,4 @@
-#include "StickerSheet.h"  
+
 #include <iostream>
 using std::cerr;
 using std::endl;
@@ -13,6 +13,7 @@ using std::vector;
 #include <algorithm>
 #include <functional>
 
+#include "StickerSheet.h"
 
 StickerSheet::StickerSheet (const Image &picture, unsigned max) {
 
@@ -24,9 +25,7 @@ StickerSheet::StickerSheet (const StickerSheet &other) {
 
 }
 const StickerSheet& StickerSheet::operator= (const StickerSheet& other) {
-	const Image* image = new Image();
-	const StickerSheet this_ = new StickerSheet(*image, 10);
-	return *this_;
+    return other;
 }
 void StickerSheet::changeMaxStickers (unsigned max) {
 
@@ -39,10 +38,11 @@ bool StickerSheet::translate (unsigned index, unsigned x, unsigned y) {
 }
 void StickerSheet::removeSticker (unsigned index) {
 }
-Image* getSticker (unsigned index) {
+Image* StickerSheet::getSticker (unsigned index) {
     return nullptr;
 }
-Image render() const {
-    return this;
+Image StickerSheet::render() const {
+    Image* img = new Image();
+    return *img;
 }
 
