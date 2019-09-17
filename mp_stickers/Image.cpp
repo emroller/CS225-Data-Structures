@@ -185,19 +185,24 @@ using std::vector;
 	unsigned y0 = this->height();
 	unsigned final_x;
 	unsigned final_y;
+	int factor;
 
 	if (x0 > y0) {
 	    final_x = w;
 	    final_y = final_x / (x0/y0);
+	    factor = x0/final_x;
 	} else if (x0 < y0) {
 	    final_y = h;
 	    final_x = final_y / (y0/x0);
+	    factor = y0/final_y;
 	} else {
-	    max = std::max(w, h);
+	    int max = std::max(w, h);
 	    final_x = max;
 	    final_y = max;
+	    factor = x0/final_x;	//doesn't matter if we use x0 or y0
 	}
 	resize(final_x, final_y);
+
 
 	for (unsigned x = 0; x < this->width(); x++) {
            for (unsigned y = 0; y < this->height(); y++) {
