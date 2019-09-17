@@ -174,11 +174,14 @@ using std::vector;
            for (unsigned y = 0; y < this->height(); y++) {
               cs225::HSLAPixel & pixel = this->getPixel(x,y);
  	      pixel = old_image->getPixel(x/factor,y/factor);
-             }
-	  } 
+           }
+	 }
+	delete old_image; 
    }
    void Image::scale(unsigned w, unsigned h) {
- 	cs225::PNG* old_image = new cs225::PNG(this->width(), this->height());
-        //save the old image so we can modify the current image 
+ 	cs225::PNG* old_image = new cs225::PNG(*this);
+        //save the old image so we can modify the current image
+        resize(w, h);
+ 	delete old_image;
 
    }

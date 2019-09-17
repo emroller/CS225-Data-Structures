@@ -42,7 +42,8 @@ Image* StickerSheet::getSticker (unsigned index) {
     return nullptr;
 }
 Image StickerSheet::render() const {
-    Image* img = new Image();
-    return *img;
+    Image i; 
+    return i;
+
 }
 
