@@ -16,10 +16,11 @@ using std::vector;
 #include "StickerSheet.h"
 
 StickerSheet::StickerSheet (const Image &picture, unsigned max) {
-
+    Image* firstImage = new Image(picture);
+    Image** image_array = new Image*[max];
 }
 StickerSheet::~StickerSheet () {
-
+    
 }
 StickerSheet::StickerSheet (const StickerSheet &other) {
 

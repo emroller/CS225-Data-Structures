@@ -181,35 +181,39 @@ using std::vector;
    void Image::scale(unsigned w, unsigned h) {
  	cs225::PNG* old_image = new cs225::PNG(*this);
         //save the old image so we can modify the current image
+
 	unsigned x0 = this->width();
 	unsigned y0 = this->height();
 	unsigned final_x;
 	unsigned final_y;
-	int factor;
+	double factor;
 
 	if (x0 > y0) {
 	    final_x = w;
-	    final_y = final_x / (x0/y0);
+	    final_y = (w * y0) / x0;
 	    factor = x0/final_x;
+
 	} else if (x0 < y0) {
 	    final_y = h;
-	    final_x = final_y / (y0/x0);
+	    final_x = (h * x0) / y0;
 	    factor = y0/final_y;
+
 	} else {
 	    int max = std::max(w, h);
 	    final_x = max;
 	    final_y = max;
-	    factor = x0/final_x;	//doesn't matter if we use x0 or y0
+	    factor = x0/final_x;
+
 	}
 	resize(final_x, final_y);
 
 
-	for (unsigned x = 0; x < this->width(); x++) {
-           for (unsigned y = 0; y < this->height(); y++) {
-              cs225::HSLAPixel & pixel = this->getPixel(x,y);
-              pixel = old_image->getPixel(x/factor,y/factor);
-           }
-         } 	   
+	//for (unsigned x = 0; x < this->width(); x++) {
+          // for (unsigned y = 0; y < this->height(); y++) {
+             // cs225::HSLAPixel & pixel = this->getPixel(x,y);
+             // pixel = old_image->getPixel(x/factor,y/factor);
+          // }
+        // } 	   
 	
  	delete old_image;
 
