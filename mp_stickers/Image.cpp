@@ -188,12 +188,12 @@ using std::vector;
 	unsigned final_y;
 	double factor;
 
-	if (x0 > y0) {
+	if (w > h) {
 	    final_x = w;
 	    final_y = (w * y0) / x0;
 	    factor = x0/final_x;
 
-	} else if (x0 < y0) {
+	} else if (w < h) {
 	    final_y = h;
 	    final_x = (h * x0) / y0;
 	    factor = y0/final_y;
