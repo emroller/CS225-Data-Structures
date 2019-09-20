@@ -5,6 +5,8 @@
 
 #include "truck.h"
 #include "color.h"
+#include "circle.h"
+#include "rectangle.h"
 
 using cs225::PNG;
 using cs225::HSLAPixel;
@@ -139,3 +141,11 @@ void Truck::clear()
     delete engine;
 }
 
+void Truck::draw(cs225::PNG* canvas) const {
+	for (int i = 0; i < NUM_WHEELS; i++) {
+		wheels[i]->Circle::draw(canvas);
+	}
+	cabin->Rectangle::draw(canvas);	
+	window->Rectangle::draw(canvas);
+	engine->Rectangle::draw(canvas);
+}
