@@ -179,31 +179,38 @@ using std::vector;
 	delete old_image; 
    }
    void Image::scale(unsigned w, unsigned h) {
-
-	unsigned x0 = this->width();
-	unsigned y0 = this->height();
-	unsigned final_x;
-	unsigned final_y;
-	double factor;
-
-	if (w < h) {
-	    final_x = w;
-	    final_y = (w * y0) / x0;
-	    factor = x0/final_x;
-
-	} else if (h < w) {
-	    final_y = h;
-	    final_x = (h * x0) / y0;
-	    factor = y0/final_y;
-
-	} else {
-	    int max = std::max(w, h);
-	    final_x = max;
-	    final_y = max;
-	    factor = x0/final_x;
-
-	}
-	resize(final_x, final_y);
+	w = (double)w;
+	h = (double)h;
+	double x = (double)this->width();
+	double y = (double)this->height();
+	
+	double x_fact = (w/x);
+	double y_fact = (h/y);
+	double factor = std::min(x_fact, y_fact);	
 	scale(factor);
 
    }
+
+    int Image::getX() {
+	return x_;
+    }
+
+    int Image::getY() {
+	return y_;
+    }
+
+    int Image::getIndex() {
+	return index_;
+    }
+    
+    void Image::setX(int x) {
+	x_ = x;
+    }
+    
+    void Image::setY(int y) {
+	y_ = y;
+    }
+    
+    void Image::setIndex(int index) {
+	index_ = index;
+    }

@@ -4,6 +4,8 @@
  */
 #pragma once
 #include "Image.h"
+#include <vector>
+using std::vector;
 
 class StickerSheet {
     public:
@@ -17,4 +19,12 @@ class StickerSheet {
 	void removeSticker (unsigned index);
 	Image* getSticker (unsigned index);
 	Image render() const;
-}; 
+
+    private:
+	int max_;
+	Image base_image;
+	Image** stickers;
+	//int x_coord[];
+	//int y_coord[];
+ 	//int indices[];
+};

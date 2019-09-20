@@ -22,5 +22,15 @@ class Image : public cs225::PNG {
   void illinify();
   void scale(double factor);
   void scale(unsigned w, unsigned h);
+  int getX();
+  int getY();
+  int getIndex();
+  void setX(int x);
+  void setY(int y);
+  void setIndex(int index);
 
+ private:
+  int x_;
+  int y_;
+  int index_; 
 };

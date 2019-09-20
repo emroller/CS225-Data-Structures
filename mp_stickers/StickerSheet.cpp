@@ -6,9 +6,6 @@ using std::endl;
 #include <string>
 using std::string;
 
-#include <vector>
-using std::vector;
-
 #include <cassert>
 #include <algorithm>
 #include <functional>
@@ -16,11 +13,15 @@ using std::vector;
 #include "StickerSheet.h"
 
 StickerSheet::StickerSheet (const Image &picture, unsigned max) {
-    Image* firstImage = new Image(picture);
-    Image** image_array = new Image*[max];
+    max_ = max;
+    base_image = picture;
+    //x_coord[] = new int[max];
+    //y_coord = new int[max];
+    //indices = new int[max];
+    stickers = new Image*[max];
 }
 StickerSheet::~StickerSheet () {
-    
+    delete stickers;
 }
 StickerSheet::StickerSheet (const StickerSheet &other) {
 
@@ -29,10 +30,12 @@ const StickerSheet& StickerSheet::operator= (const StickerSheet& other) {
     return other;
 }
 void StickerSheet::changeMaxStickers (unsigned max) {
-
+	
 }
 int StickerSheet::addSticker (Image &sticker, unsigned x, unsigned y) {
-    return 1;
+    sticker.setX(x);
+    sticker.setY(y);   
+	return 1;
 } 
 bool StickerSheet::translate (unsigned index, unsigned x, unsigned y) {
     return false;
@@ -47,4 +50,4 @@ Image StickerSheet::render() const {
     return i;
 
 }
-
+	

@@ -142,7 +142,7 @@ TEST_CASE("Image scale(0.5) scales pixel data in a reasonable way", "[weight=1][
 
 TEST_CASE("Image scale(240, 50) results in the correct width/height") {
 	Image img = createRainbowImage();
-	img.resize(240, 66);
+	img.resize(180, 50);
 	Image result = createRainbowImage();
 	
 	result.scale(240, 50);
@@ -152,7 +152,7 @@ TEST_CASE("Image scale(240, 50) results in the correct width/height") {
 
 TEST_CASE("Image scale(10000, 200) results in the correct width/height") {
         Image img = createRainbowImage();
-        img.resize(10000, 2777);
+        img.resize(720, 200);
         Image result = createRainbowImage();
 
         result.scale(10000, 200);
@@ -162,7 +162,7 @@ TEST_CASE("Image scale(10000, 200) results in the correct width/height") {
 
 TEST_CASE("Image scale(720, 10000) results in the correct width/height") {
         Image img = createRainbowImage();
-        img.resize(36000, 10000);
+        img.resize(720, 200);
         Image result = createRainbowImage();
 
         result.scale(720, 10000);
