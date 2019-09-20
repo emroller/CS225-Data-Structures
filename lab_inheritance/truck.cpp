@@ -142,10 +142,11 @@ void Truck::clear()
 }
 
 void Truck::draw(cs225::PNG* canvas) const {
-	for (int i = 0; i < NUM_WHEELS; i++) {
-		wheels[i]->Circle::draw(canvas);
-	}
 	cabin->Rectangle::draw(canvas);	
 	window->Rectangle::draw(canvas);
 	engine->Rectangle::draw(canvas);
+	trailer->Rectangle::draw(canvas);
+	for (int i = 0; i < NUM_WHEELS; i++) {
+                wheels[i]->Circle::draw(canvas);
+        }
 }
