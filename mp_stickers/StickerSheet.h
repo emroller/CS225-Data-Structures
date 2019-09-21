@@ -19,12 +19,13 @@ class StickerSheet {
 	void removeSticker (unsigned index);
 	Image* getSticker (unsigned index);
 	Image render() const;
+	void copy(StickerSheet const& other);
 
     private:
 	int max_;
 	Image base_image;
 	Image** stickers;
-	//int x_coord[];
-	//int y_coord[];
- 	//int indices[];
+	int* x_coord;
+	int* y_coord;
+ 	int* indices;
 };
