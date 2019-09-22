@@ -5,6 +5,8 @@
 #pragma once
 #include "Image.h"
 #include <vector>
+#include "Sticker.h"
+
 using std::vector;
 
 class StickerSheet {
@@ -21,11 +23,8 @@ class StickerSheet {
 	Image render() const;
 	void copy(StickerSheet const& other);
 
-    private:
 	int max_;
-	Image base_image;
-	Image** stickers;
-	int* x_coord;
-	int* y_coord;
- 	int* indices;
+	vector<Sticker*> stickers_;
+	Image* base_image_;
+    //private:
 };
