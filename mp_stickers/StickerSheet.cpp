@@ -58,3 +58,42 @@ void StickerSheet::copy(StickerSheet const& other) {
 	}
 	
 }	
+
+Sticker::Sticker(vector<int> coordinates, Image& image) {
+	coordinates_ = coordinates;
+	image_ = &image;
+}
+
+Sticker::Sticker(Sticker& other) {
+	for (unsigned int i = 0; i < other.coordinates_.size(); i++) {
+		coordinates_.push_back(other.coordinates_.at(i));
+	}
+	image_ = new Image(*other.image_);
+}
+
+const Sticker & Sticker::operator=(const Sticker &other)  {
+	if (*this != other) {
+		for (unsigned int i = 0; i < other.coordinates_.size(); i++) {
+                coordinates_.push_back(other.coordinates_.at(i));
+        	}
+	}	
+        image_ = new Image(*other.image_);
+	return *this;
+}
+
+bool Sticker::operator!=(const Sticker &other) {
+	return !(*this == other);
+}
+
+bool Sticker::operator==(const Sticker &other) {
+    if (image_ == other.image_ && coordinates_.size()== other.coordinates_.size()){
+	for (unsigned int  i = 0; i < coordinates_.size();i ++) {
+	     if (coordinates_[i] != other.coordinates_[i]) {
+		return false;
+	     }
+	}
+    } else{
+	return false;
+    }
+    return true;
+}

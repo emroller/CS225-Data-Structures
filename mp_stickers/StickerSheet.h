@@ -5,9 +5,18 @@
 #pragma once
 #include "Image.h"
 #include <vector>
-#include "Sticker.h"
-
 using std::vector;
+
+class Sticker {
+        public:
+            Sticker(vector<int> coordinates, Image& image);
+            Sticker(Sticker& other);
+            vector<int> coordinates_;
+            Image* image_;
+            const Sticker &operator=(const Sticker &other);
+	    bool operator!=(const Sticker &other);
+	    bool operator==(const Sticker &other);
+};
 
 class StickerSheet {
     public:
@@ -28,3 +37,4 @@ class StickerSheet {
 	Image* base_image_;
     //private:
 };
+
