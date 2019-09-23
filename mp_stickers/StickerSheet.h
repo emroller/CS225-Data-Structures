@@ -38,7 +38,6 @@ class StickerSheet {
 	void copy(StickerSheet const& other);
     private:
 	unsigned int max_;
-	unsigned int layers_;
 	vector<Sticker*> stickers_;
 	Image* base_image_;
 };

@@ -15,7 +15,6 @@ using std::string;
 void Sticker::addCoordinates()  {
 	for (unsigned int x = coordinates_[0]; x < (x + image_->width()); x++) {
 		for (int y = coordinates_[1] -  (image_->height()) + 1; y < coordinates_[1] + 1; y++) {
-			//image_coordinates_.push_back(tuple<int, int>(x, y));
 			image_coordinates_.push_back(vector<int>{static_cast<int>(x), static_cast<int>(y)});
 		}
 	}
@@ -69,11 +68,15 @@ bool Sticker::operator==(const Sticker &other) {
 
 StickerSheet::StickerSheet (const Image &picture, unsigned max) {
     max_ = max;
-    *base_image_ = picture;
-	layers_ =  0;
+	Image* pic  = new Image(picture);
+    base_image_ = pic;
 }
 
 StickerSheet::~StickerSheet () {
+	for (unsigned int i = 0; i < stickers_.size(); i++) {
+		delete stickers_[i];
+	}
+	delete base_image_;
 }
 
 StickerSheet::StickerSheet (const StickerSheet &other) {	    
@@ -116,11 +119,26 @@ bool StickerSheet::translate (unsigned index, unsigned x, unsigned y) {
 	return true;
 }
 void StickerSheet::removeSticker (unsigned index) {
+	if (index >= 0 && index < stickers_.size()) {
+		for (Sticker* stick: stickers_) {
+			if (stick->layer == index) {
+				//stickers_.erase((int)index);
+			} else if (stick->layer > index) {
+				stick->layer--;
+			}
+		}
+	}
 }
 
 Image* StickerSheet::getSticker (unsigned index) {
-    return nullptr;
+	for (Sticker* stick : stickers_) {
+		if (stick->layer == index) {
+			return stick->image_;
+		}
+	}
+	return NULL;
 }
+
 Image StickerSheet::render() const {
     Image* image = new Image();
 	image->resize(base_image_->width(), base_image_->height()); 
