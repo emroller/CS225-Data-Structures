@@ -14,8 +14,9 @@ using std::string;
 
 void Sticker::addCoordinates()  {
 	for (unsigned int x = coordinates_[0]; x < (x + image_->width()); x++) {
-		for ( int y = coordinates_[1] -  (image_->height()) + 1; y < coordinates_[1] + 1; y++) {
-			image_coordinates_.push_back(tuple<int, int>(x, y));
+		for (int y = coordinates_[1] -  (image_->height()) + 1; y < coordinates_[1] + 1; y++) {
+			//image_coordinates_.push_back(tuple<int, int>(x, y));
+			image_coordinates_.push_back(vector<int>{static_cast<int>(x), static_cast<int>(y)});
 		}
 	}
 }
@@ -103,7 +104,16 @@ int StickerSheet::addSticker (Image &sticker, unsigned x, unsigned y) {
 } 
 
 bool StickerSheet::translate (unsigned index, unsigned x, unsigned y) {
-    return false;
+    if  (index > max_)  {
+		return false;
+	}
+	for (Sticker* stick: stickers_) {
+		if (stick->layer == index) {
+			stick->coordinates_[0] = x;
+			stick->coordinates_[1] = y;
+		}
+	}
+	return true;
 }
 void StickerSheet::removeSticker (unsigned index) {
 }
@@ -124,8 +134,13 @@ Image StickerSheet::render() const {
 	for (unsigned int x= 0;  x < image->width(); x++) {
 		for (unsigned int y = 0; y<  image->height(); y++) {
 			for (Sticker* stick : stickers_) {
-			//TODO:  here!!	
-            }
+				for (vector<int> vec: stick->image_coordinates_) {
+					if (x == (unsigned)vec[0]  && y == (unsigned)vec[1]) {
+						cs225::HSLAPixel& pixel = image->getPixel(x,y);
+						pixel = stick->image_->getPixel(x,y);
+					}
+				}	    			
+			}
 
 		}
 	}

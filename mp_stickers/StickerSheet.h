@@ -20,7 +20,7 @@ class Sticker {
 	    unsigned int layer;
 	    vector<int> coordinates_;
             Image* image_;
-	    vector<tuple<int,  int>> image_coordinates_;
+	    vector<vector< int>> image_coordinates_;
 };
 
 class StickerSheet {
