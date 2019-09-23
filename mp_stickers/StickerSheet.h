@@ -1,4 +1,4 @@
-/**
+/*i*
  * @file StickerSheet.h
  * Contains your declaration of the interface for the StickerSheet class.
  */
@@ -6,20 +6,25 @@
 #include "Image.h"
 #include <vector>
 using std::vector;
+using std::tuple;
 
 class Sticker {
         public:
-            Sticker(vector<int> coordinates, Image& image);
+            Sticker(Image& image, int x, int y);
+	    void stickerCopy(Sticker const& other);
             Sticker(Sticker& other);
-            vector<int> coordinates_;
-            Image* image_;
             const Sticker &operator=(const Sticker &other);
 	    bool operator!=(const Sticker &other);
 	    bool operator==(const Sticker &other);
+	    void addCoordinates();
+	    unsigned int layer;
+	    vector<int> coordinates_;
+            Image* image_;
+	    vector<tuple<int,  int>> image_coordinates_;
 };
 
 class StickerSheet {
-    public:
+	public:
 	StickerSheet (const Image &picture, unsigned max);
 	~StickerSheet ();
 	StickerSheet (const StickerSheet &other);
@@ -31,10 +36,10 @@ class StickerSheet {
 	Image* getSticker (unsigned index);
 	Image render() const;
 	void copy(StickerSheet const& other);
-
-	int max_;
+    private:
+	unsigned int max_;
+	unsigned int layers_;
 	vector<Sticker*> stickers_;
 	Image* base_image_;
-    //private:
 };
 
