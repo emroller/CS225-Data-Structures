@@ -29,7 +29,6 @@ namespace cs225 {
     // Clear self
     if (imageData_ != NULL) {
     	delete[] imageData_;
-		imageData_  =  NULL;
 	}
     // Copy `other` to self
     width_ = other.width_;
@@ -62,9 +61,9 @@ namespace cs225 {
   }
 
   PNG const & PNG::operator=(PNG const & other) {
-    //	if (this != &other) {
+    	if (this != &other) {
 		 _copy(other);
-	// }
+	 }
     return *this;
   }
 

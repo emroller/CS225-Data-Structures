@@ -27,6 +27,10 @@ Sticker::Sticker( Image& image, int x, int y) {
 		addCoordinates();
 }
 
+Sticker::~Sticker() {
+	delete image_;
+}
+
 void Sticker::stickerCopy(Sticker const& other)  {
     for (unsigned int i = 0; i < other.coordinates_.size(); i++) {
         coordinates_.push_back(other.coordinates_.at(i));
@@ -78,6 +82,7 @@ StickerSheet::~StickerSheet () {
 		delete stickers_[i];
 		stickers_[i] = NULL;
 	}
+	delete base_image_;
 }
 
 StickerSheet::StickerSheet (const StickerSheet &other) {	    
@@ -85,9 +90,9 @@ StickerSheet::StickerSheet (const StickerSheet &other) {
 }
 
 const StickerSheet& StickerSheet::operator= (const StickerSheet& other) {
-	//if (*this != other) {
+//	if (*this != other) {
 		copy(other);
-	//}
+//	}
 	return *this;
 }
 
@@ -176,5 +181,4 @@ void StickerSheet::copy(StickerSheet const& other) {
 	}
 	
 }
-
 

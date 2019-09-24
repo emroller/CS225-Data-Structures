@@ -9,22 +9,23 @@ using std::vector;
 using std::tuple;
 
 class Sticker {
-        public:
-            Sticker(Image& image, int x, int y);
+    public:
+        Sticker(Image& image, int x, int y);
+		~Sticker();
 	    void stickerCopy(Sticker const& other);
-            Sticker(Sticker& other);
-            const Sticker &operator=(const Sticker &other);
+        Sticker(Sticker& other);
+        const Sticker &operator=(const Sticker &other);
 	    bool operator!=(const Sticker &other);
 	    bool operator==(const Sticker &other);
 	    void addCoordinates();
 	    unsigned int layer;
 	    vector<int> coordinates_;
-            Image* image_;
+        Image* image_;
 	    vector<vector< int>> image_coordinates_;
 };
 
-class StickerSheet {
-	public:
+class StickerSheet {	
+  public:
 	StickerSheet (const Image &picture, unsigned max);
 	~StickerSheet ();
 	StickerSheet (const StickerSheet &other);
