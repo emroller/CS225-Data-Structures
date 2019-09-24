@@ -27,8 +27,10 @@ using std::vector;
 namespace cs225 {
   void PNG::_copy(PNG const & other) {
     // Clear self
-    delete[] imageData_;
-
+    if (imageData_ != NULL) {
+    	delete[] imageData_;
+		imageData_  =  NULL;
+	}
     // Copy `other` to self
     width_ = other.width_;
     height_ = other.height_;
@@ -60,7 +62,9 @@ namespace cs225 {
   }
 
   PNG const & PNG::operator=(PNG const & other) {
-    if (this != &other) { _copy(other); }
+    //	if (this != &other) {
+		 _copy(other);
+	// }
     return *this;
   }
 

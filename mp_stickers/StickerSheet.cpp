@@ -68,15 +68,16 @@ bool Sticker::operator==(const Sticker &other) {
 
 StickerSheet::StickerSheet (const Image &picture, unsigned max) {
     max_ = max;
-	Image* pic  = new Image(picture);
-    base_image_ = pic;
+	base_image_ = new Image();
+	*base_image_ = picture;
 }
+
 
 StickerSheet::~StickerSheet () {
 	for (unsigned int i = 0; i < stickers_.size(); i++) {
 		delete stickers_[i];
+		stickers_[i] = NULL;
 	}
-	delete base_image_;
 }
 
 StickerSheet::StickerSheet (const StickerSheet &other) {	    
@@ -120,11 +121,11 @@ bool StickerSheet::translate (unsigned index, unsigned x, unsigned y) {
 }
 void StickerSheet::removeSticker (unsigned index) {
 	if (index >= 0 && index < stickers_.size()) {
-		for (Sticker* stick: stickers_) {
-			if (stick->layer == index) {
-				//stickers_.erase((int)index);
-			} else if (stick->layer > index) {
-				stick->layer--;
+		for (unsigned int i =0; i < stickers_.size(); i++) {
+			if (stickers_[i]->layer == index) {
+				stickers_.erase(stickers_.begin()+ index);
+			} else if (stickers_[i]->layer > index) {
+				stickers_[i]->layer--;
 			}
 		}
 	}
@@ -168,7 +169,6 @@ Image StickerSheet::render() const {
 }
 void StickerSheet::copy(StickerSheet const& other) {
 	stickers_.clear();
-	layers_ = other.layers_;
 	max_ = other.max_;
 	for (unsigned i = 0; i < other.stickers_.size(); i++) {
 		Sticker* pointer  = new Sticker(*(other.stickers_[i]));

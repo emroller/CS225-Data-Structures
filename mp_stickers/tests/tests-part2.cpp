@@ -17,16 +17,16 @@ static void checkStickerPlacement(const Image& sticker, const Image& sheet, cons
 }
 
 TEST_CASE("A basic StickerSheet works", "[weight=5][part=2][timeout=30000][valgrind]") {
-  Image alma; alma.readFromFile("tests/alma.png");
-  Image i;    i.readFromFile("tests/i.png");
+	Image alma; alma.readFromFile("tests/alma.png");
+ 	Image i;    i.readFromFile("tests/i.png");
 
-  StickerSheet sheet(alma, 5);
+  	StickerSheet sheet(alma, 5);
   sheet.addSticker(i, 20, 200);
 
   Image expected;
   expected.readFromFile("tests/expected.png");
 
-  REQUIRE( sheet.render() == expected );
+	REQUIRE( sheet.render() == expected );
 }
 
 

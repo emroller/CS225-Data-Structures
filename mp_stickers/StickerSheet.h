@@ -36,7 +36,7 @@ class StickerSheet {
 	Image* getSticker (unsigned index);
 	Image render() const;
 	void copy(StickerSheet const& other);
-    private:
+	
 	unsigned int max_;
 	vector<Sticker*> stickers_;
 	Image* base_image_;
