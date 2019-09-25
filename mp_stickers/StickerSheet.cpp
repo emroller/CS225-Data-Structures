@@ -2,6 +2,7 @@
 #include <iostream>
 using std::cerr;
 using std::endl;
+using std::cout;
 
 #include <string>
 using std::string;
@@ -13,22 +14,32 @@ using std::string;
 #include "StickerSheet.h"
 
 void Sticker::addCoordinates()  {
-	for (unsigned int x = coordinates_[0]; x < (x + image_->width()); x++) {
-		for (int y = coordinates_[1] -  (image_->height()) + 1; y < coordinates_[1] + 1; y++) {
-			image_coordinates_.push_back(vector<int>{static_cast<int>(x), static_cast<int>(y)});
+
+	for (int x = coordinates_[0]; x < (int)(coordinates_[0] + image_->width()); x++) {
+		if (coordinates_[1] - image_->height() < 0) {	//if the image exceeds the first quadrant plane
+			std::cout<<"here"<<std::endl;
+			for (int y = 0; y < (int)image_->height(); y++) {
+				vector<int> pair = {x,y};
+				image_coordinates_.push_back(pair);	
+			} 
+		} else {
+			for (int y = (coordinates_[1] - image_->height()); y < coordinates_[1]; y++) {
+				vector<int> pair = {x,y};
+				image_coordinates_.push_back(pair);
+			}
 		}
 	}
 }
 
 Sticker::Sticker( Image& image, int x, int y) {
-        coordinates_.push_back(y);
 		coordinates_.push_back(x);
+		coordinates_.push_back(y);
         image_ = &image;
 		addCoordinates();
 }
 
 Sticker::~Sticker() {
-	delete image_;
+	//delete image_;
 }
 
 void Sticker::stickerCopy(Sticker const& other)  {
@@ -71,7 +82,8 @@ bool Sticker::operator==(const Sticker &other) {
 
 
 StickerSheet::StickerSheet (const Image &picture, unsigned max) {
-    max_ = max;
+	max_ = max;
+	cout<<picture.width()<< " " << picture.height()<<endl;
 	base_image_ = new Image();
 	*base_image_ = picture;
 }
@@ -106,10 +118,11 @@ int StickerSheet::addSticker (Image &sticker, unsigned x, unsigned y) {
 		return -1;
 	}
 	// make a new sticker and add it to the vector of stickers
-   	Sticker newSticker(sticker, x, y);
-	stickers_.push_back(&newSticker);
-	newSticker.layer  = stickers_.size();
-	return newSticker.layer;
+	Sticker* newSticker = new Sticker(sticker, x, y);
+	newSticker->layer = stickers_.size();
+	stickers_.push_back(newSticker);
+	//newSticker->layer  = stickers_.size();
+	return newSticker->layer;
 } 
 
 bool StickerSheet::translate (unsigned index, unsigned x, unsigned y) {
@@ -137,8 +150,12 @@ void StickerSheet::removeSticker (unsigned index) {
 }
 
 Image* StickerSheet::getSticker (unsigned index) {
+	cout<<"Haw"<<endl;
 	for (Sticker* stick : stickers_) {
+		cout<<stick->layer<<endl;
+		cout<<index<<endl;
 		if (stick->layer == index) {
+			std::cout<<"layer"<<endl;
 			return stick->image_;
 		}
 	}
@@ -146,9 +163,11 @@ Image* StickerSheet::getSticker (unsigned index) {
 }
 
 Image StickerSheet::render() const {
+std::cout<<base_image_->width()<< " x " <<base_image_->height()<<std::endl;
     Image* image = new Image();
 	image->resize(base_image_->width(), base_image_->height()); 
-    for (unsigned int x = 0; x < image->width(); x++) {
+	std::cout<<"resize"<<std::endl;
+	for (unsigned int x = 0; x < image->width(); x++) {
 		for (unsigned int y = 0; y < image->height(); y++) {
 			cs225::HSLAPixel & pixel = image->getPixel(x, y);
 			pixel = base_image_->getPixel(x, y);
@@ -157,14 +176,14 @@ Image StickerSheet::render() const {
 
 	for (unsigned int x= 0;  x < image->width(); x++) {
 		for (unsigned int y = 0; y<  image->height(); y++) {
-			for (Sticker* stick : stickers_) {
-				for (vector<int> vec: stick->image_coordinates_) {
-					if (x == (unsigned)vec[0]  && y == (unsigned)vec[1]) {
-						cs225::HSLAPixel& pixel = image->getPixel(x,y);
-						pixel = stick->image_->getPixel(x,y);
-					}
-				}	    			
-			}
+			//for (Sticker* stick : stickers_) {
+			//	for (vector<int> vec: stick->image_coordinates_) {
+			//		if (x == (unsigned)vec[0]  && y == (unsigned)vec[1]) {
+			//			cs225::HSLAPixel& pixel = image->getPixel(x,y);
+			//			pixel = stick->image_->getPixel(x,y);
+			//		}
+			//	}	    			
+		//	}
 
 		}
 	}
