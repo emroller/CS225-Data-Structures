@@ -106,16 +106,34 @@ void scramble(queue<T>& q)
 {
     stack<T> s;
     // optional: queue<T> q2;
-	unsigned c;
-	for (unsigned i = 0; i < q.size(); i+= c) {
-		if (i % 2 == 0) {
-			//keep
-		} else {
-			//reverse
-		}
-
-	} 
     // Your code here
+	unsigned seen = 0; 
+	unsigned count = 1;
+
+	while (seen < q.size()) {
+
+		bool reverse = (count % 2 == 0)? true : false;
+		count = (count < q.size() - seen)? count : q.size() - seen;
+
+		if (reverse) {
+			for (unsigned i = 0; i < count; i++) {
+				s.push(q.front());
+				q.pop();
+				seen++;
+			}
+			while (!s.empty()) {
+				q.push(s.top());
+				s.pop();
+			}
+		} else {
+			for (unsigned i = 0; i <  count; i++) {
+				q.push(q.front());
+				q.pop();
+				seen++;
+			} 
+		}
+		count++;
+	}
 }
 
 /**
@@ -143,13 +161,25 @@ void scramble(queue<T>& q)
 template <typename T>
 bool verifySame(stack<T>& s, queue<T>& q)
 {
-    bool retval = true; // optional
-    // T temp1; // rename me
-    // T temp2; // rename :)
+	bool retval = false;
+    //T temp1 = s.top();
+    //T temp2 = q.pop();
 
+	if (s.size() ==  1) {
+		return s.top() == q.front();
+
+	} else {
+		T temp1 = s.top();
+		s.pop();
+		retval = verifySame(s, q);
+		s.push(temp1);
+	}
+
+	return retval;
+	//s.pop();
     // Your code here
-
-    return retval;
+	
+    return verifySame(s, q);
 }
 
 }
