@@ -165,7 +165,7 @@ TEST_CASE("List::_destroy empty list", "[weight=3][part=1][valgrind]") {
 //
 TEST_CASE("List::begin() returns an iterator to the front of the list", "[weight=1][part=1][valgrind]") {
     List<int> list;
-    for (unsigned i = 0; i < 10; i++) { list.insertFront(i); }
+    for (unsigned i = 0; i < 10; i++) { std::cout<<"here"<<std::endl; list.insertFront(i); }
 
     List<int>::ListIterator iter = list.begin();
     REQUIRE( *iter == 9 );
@@ -232,7 +232,7 @@ TEST_CASE("List::ListIterator::end is reached", "[weight=1][part=1][valgrind]") 
     list.insertFront(3);
 
     List<unsigned>::ListIterator iter = list.begin();
-    iter++;
+	iter++;
     iter++;
     iter++;
 

@@ -39,7 +39,7 @@ class ListIterator : public std::iterator<std::bidirectional_iterator_tag, T> {
         // @TODO: graded in MP3.1
         ListIterator temp = *this;
 	    --*this; 
-	    return *this;
+	    return temp;
     }
 
     bool operator!=(const ListIterator& rhs) {
