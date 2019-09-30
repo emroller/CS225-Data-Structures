@@ -19,34 +19,43 @@ using namespace cs225;
 //
 TEST_CASE("List::insertFront size", "[weight=1][part=1][valgrind]") {
     List<int> list;
+	List<int> list1;
 
     for (unsigned i = 0; i < 10; i++) { list.insertFront(i); }
+	list1.insertFront(11);
 
     REQUIRE( 10 == list.size() );
+	REQUIRE( 1 == list1.size());
 }
 
 TEST_CASE("List::insertBack size", "[weight=2][part=1][valgrind]") {
     List<int> list;
+	List<int>list1;
 
     for (unsigned i = 0; i < 10; i++) { list.insertBack(i); }
+	list1.insertBack(16);
+
+	REQUIRE( 1 == list1.size());
+	list1.insertBack(13);
+	REQUIRE( 2 == list1.size());
 
     REQUIRE( 10 == list.size() );
 }
 
 TEST_CASE("List::insert contents", "[weight=4][part=1][valgrind]") {
     List<int> list;
-
-    list.insertBack(3);
+    
+	list.insertBack(3);
     list.insertBack(2);
     list.insertBack(1);
     list.insertFront(3);
-    list.insertFront(2);
+	list.insertFront(2);
     list.insertFront(1);
-
-    stringstream s;
+    
+	stringstream s;
     list.print(s);
-
-    REQUIRE( "< 1 2 3 3 2 1 >" == s.str() );
+ //	std::cout<< s.str() <<std::endl;   
+	REQUIRE( "< 1 2 3 3 2 1 >" == s.str() );
 }
 
 

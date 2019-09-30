@@ -7,8 +7,11 @@ template <class T>
 List<T>::List() { 
   // @TODO: graded in MP3.1
     ListNode* head_ = NULL;
+
     ListNode* tail_ = NULL;
+	length_ = 0;
 }
+
 
 /**
  * Returns a ListIterator with a position at the beginning of
@@ -37,8 +40,14 @@ typename List<T>::ListIterator List<T>::end() const {
 template <typename T>
 void List<T>::_destroy() {
   /// @todo Graded in MP3.1
-}
+	ListNode* curr = head_;
 
+	while(curr) {
+		ListNode* next = curr->next;
+		delete curr;
+		curr = next;
+	}	
+}
 /**
  * Inserts a new node at the front of the List.
  * This function **SHOULD** create a new ListNode.
@@ -51,21 +60,26 @@ void List<T>::insertFront(T const & ndata) {
   ListNode * newNode = new ListNode(ndata);
   newNode -> next = head_;
   newNode -> prev = NULL;
-  
+
   if (head_ != NULL) {
     head_ -> prev = newNode;
   }
+
   if (tail_ == NULL) {
     tail_ = newNode;
-  }
-  
+    tail_->next = NULL;
+	}
+	
+  head_ = newNode;
+  head_->prev = NULL;
 
   length_++;
 
 }
 
 /**
- * Inserts a new node at the back of the List.
+
+  * Inserts a new node at the back of the List.
  * This function **SHOULD** create a new ListNode.
  *
  * @param ndata The data to be inserted.
@@ -73,6 +87,23 @@ void List<T>::insertFront(T const & ndata) {
 template <typename T>
 void List<T>::insertBack(const T & ndata) {
   /// @todo Graded in MP3.1
+  ListNode * newNode = new ListNode(ndata);
+  newNode -> next = NULL;
+  newNode -> prev = tail_;
+  
+  if (tail_ != NULL) {
+    tail_ -> next = newNode;
+  }
+  if (head_ == NULL) {
+    head_ = newNode;
+    head_->prev = NULL;
+  }
+	
+  tail_ = newNode;
+  tail_->next = NULL;
+
+  length_++;
+
 }
 
 /**
