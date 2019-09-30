@@ -53,8 +53,9 @@ TEST_CASE("List::insert contents", "[weight=4][part=1][valgrind]") {
     list.insertFront(1);
     
 	stringstream s;
-    list.print(s);
- //	std::cout<< s.str() <<std::endl;   
+list.print(s);
+ 	
+//	std::cout<< s.str() <<std::endl;   
 	REQUIRE( "< 1 2 3 3 2 1 >" == s.str() );
 }
 
