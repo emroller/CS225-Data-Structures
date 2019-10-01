@@ -91,7 +91,23 @@ TEST_CASE("List::split simple", "[weight=5][part=1][valgrind]") {
 
     REQUIRE( "< 1 2 >" == s1.str() );
     REQUIRE( "< 3 4 >" == s2.str() );
+
+	List<int> mylist;
+
+	mylist.insertBack(1);
+	mylist.insertBack(6);
+
+	List<int>slist2 = mylist.split(3);
+	stringstream s3, s4;
+
+	mylist.print(s3);
+	slist2.print(s4);
+
+	REQUIRE( "< 1 6 >" == s3.str());
+	REQUIRE( "< >" == s4.str());
+
 }
+
 
 TEST_CASE("List::split images", "[weight=5][part=1]") {
 
