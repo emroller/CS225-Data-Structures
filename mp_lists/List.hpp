@@ -124,18 +124,24 @@ void List<T>::insertBack(const T & ndata) {
 template <typename T>
 typename List<T>::ListNode * List<T>::split(ListNode * start, int splitPoint) {
   /// @todo Graded in MP3.1
-  ListNode * curr = start;
+	ListNode * curr = start;
+	ListNode* newStart = NULL;
 
   for (int i = 0; i < splitPoint || curr != NULL; i++) {
-    curr = curr->next;
+	if (i == splitPoint - 1) {
+		newStart = curr->next;
+		curr->next = NULL;
+		break;
+	}  
+  curr = curr->next;
   }
 
-  if (curr != NULL) {
-      curr->prev->next = NULL;
-      curr->prev = NULL;
-  }
+  //if (curr != NULL) {
+    //  curr->prev->next = NULL;
+      //curr->prev = NULL;
+  //}
 
-  return NULL;
+  return newStart;
 }
 
 /**
