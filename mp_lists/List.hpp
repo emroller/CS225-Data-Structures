@@ -137,10 +137,6 @@ typename List<T>::ListNode * List<T>::split(ListNode * start, int splitPoint) {
   }
 //TODO: check for edge cases
 
-  //if (curr != NULL)    //  curr->prev->next = NULL;
-      //curr->prev = NULL;
-  //}
-
   return newStart;
 }
 
@@ -157,16 +153,19 @@ template <typename T>
 void List<T>::waterfall() {
   /// @todo Graded in MP3.1
 	ListNode* curr = head_;
-	ListNode* temp = NULL;
-
-	for (int i = 0; i < length_; i++) {
-		if (i % 2 == 0) {
-			temp = curr->next->next;
-			tail_->next = curr->next;
-			curr->next->next = NULL;
-			curr->next = temp;			
-		}
-
+	
+	while (curr->next->next != NULL) {
+		
+		curr->next->next->prev = curr;
+		ListNode* temp = curr->next;
+		curr->next = curr->next->next;
+	
+		temp->next = NULL;
+		temp->prev = tail_;
+		
+		tail_->next = temp;
+		tail_ = temp;
+		curr = curr->next;
 	}
 
 }
