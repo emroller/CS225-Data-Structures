@@ -172,7 +172,9 @@ class BinaryTree
         Node* root;
 
     private:
-
+	void myInOrder(Node* subRoot, std::vector<T>& treeVector) const;
+	bool isOrderedRecursive(Node* subroot, T min, T max) const;
+	bool isOrderedIterative(Node* subRoot) const;
         /**
          * Put your own private helper functions here.
          * Look at the private helpers for height and printLeftToRight

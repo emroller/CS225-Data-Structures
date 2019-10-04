@@ -94,6 +94,19 @@ void BinaryTree<T>::mirror(Node* subRoot) {
 	mirror(subRoot->right);
 }
 
+template <typename T>
+void BinaryTree<T>::myInOrder(Node* subRoot, std::vector<T>& treeVector) const {
+    if(subRoot != NULL){
+      myInOrder(subRoot->left, treeVector);
+      treeVector.push_back(subRoot->elem);
+      myInOrder(subRoot->right, treeVector);
+    }
+}
+template <typename T>
+bool BinaryTree<T>::isOrderedIterative() const {
+	return isOrderedIterative(root);
+}
+
 
 /**
  * isOrdered() function iterative version
@@ -102,13 +115,21 @@ void BinaryTree<T>::mirror(Node* subRoot) {
  *  criterion for a binary tree to be a binary search tree.
  */
 template <typename T>
-bool BinaryTree<T>::isOrderedIterative() const
+bool BinaryTree<T>::isOrderedIterative(Node* subRoot) const
 {
     // your code here
-    //std::vector<T>& values;
-//	inOrder(values);
-
-    return false;
+    typename std::vector<T> values;
+    if(subRoot != NULL){
+        myInOrder(subRoot->left, values);
+        values.push_back(subRoot->elem);
+        myInOrder(subRoot->right, values);
+    }
+	for (unsigned i = 0; i < values.size() - 1; i++) {
+		if (values.at(i) > values.at(i + 1)) {
+			return false;
+		}
+	}
+    return true;
 }
 
 /**
@@ -121,9 +142,20 @@ template <typename T>
 bool BinaryTree<T>::isOrderedRecursive() const
 {
     // your code here
-    return false;
-}
 
+    return isOrderedRecursive(root, 0, INT_MAX);
+}
+template <typename T>
+bool BinaryTree<T>::isOrderedRecursive(Node* subroot, T min, T max) const {
+	if (subroot == NULL) {
+		return true;
+	}	
+	int data = subroot->elem;
+	if (data < min || data > max) {
+		return false;
+	}
+	return isOrderedRecursive(subroot->left, min, data) && isOrderedRecursive(subroot->right, data, max);	
+}
 
 /**
  * creates vectors of all the possible paths from the root of the tree to any leaf
