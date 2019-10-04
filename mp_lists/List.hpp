@@ -214,7 +214,7 @@ void List<T>::reverse(ListNode *& startPoint, ListNode *& endPoint) {
 		curr->next = temp;
 		curr = curr->prev;
 	}
-	if (temp != NULL ) { 
+	if (temp != NULL) { 
         	startPoint = temp->prev; 
 	}
 
