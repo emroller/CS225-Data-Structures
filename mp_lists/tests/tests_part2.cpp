@@ -43,6 +43,23 @@ TEST_CASE("List::reverse", "[weight=5][part=2]") {
 }
 
 TEST_CASE("List::reverseNth #1", "[weight=5][part=2]") {
+List<int> mylist;
+
+    mylist.insertBack(1);
+    mylist.insertBack(2);
+    mylist.insertBack(3);
+    mylist.insertBack(4);
+    mylist.insertBack(5);
+    mylist.insertBack(6);
+
+    mylist.reverseNth(3);
+
+    stringstream s;
+    mylist.print(s);
+
+    REQUIRE(s.str() == "<  3 2 1 6 5 3 >");
+	
+
   PNG in;        in.readFromFile("tests/alma.png");
   PNG expected;  expected.readFromFile("tests/expected-reverseN_1.png");
 

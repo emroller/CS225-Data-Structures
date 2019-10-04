@@ -178,7 +178,7 @@ class BinaryTree
          * Look at the private helpers for height and printLeftToRight
          *  as examples.
          */
-
+	void mirror( Node* subRoot);
         /**
          * Private helper function for the public height function.
          * @param subRoot The current node in the recursion
