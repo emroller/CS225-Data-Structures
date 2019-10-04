@@ -15,6 +15,21 @@ using namespace cs225;
 
 
 TEST_CASE("List::reverse", "[weight=5][part=2]") {
+    List<int> mylist;
+
+    mylist.insertBack(2);
+    mylist.insertBack(5);
+    mylist.insertBack(4);
+	mylist.insertBack(1);
+
+    mylist.reverse();
+
+    stringstream s;
+    mylist.print(s);
+
+    REQUIRE(s.str() == "< 1 4 5 2 >");
+	
+
   PNG in;        in.readFromFile("tests/alma.png");
   PNG expected;  expected.readFromFile("tests/expected-reverse.png");
 
