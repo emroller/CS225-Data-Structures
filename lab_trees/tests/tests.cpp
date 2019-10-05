@@ -199,7 +199,7 @@ TEST_CASE("test_getPaths", "[weight=10]"){
 
     vector<vector<int> > treePaths;
     tree.getPaths(treePaths);
-
+	std::cout<<treePaths.size()<<std::endl;
     int arr[5][4] = {{52,39,17,0},{52,39,17,24},{52,39,47,-1},{52,71,69,-1},{52,71,80,90}};
 
     vector<vector <int> > treePathSolution;

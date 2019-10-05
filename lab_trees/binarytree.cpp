@@ -169,9 +169,52 @@ template <typename T>
 void BinaryTree<T>::getPaths(std::vector<std::vector<T>>& paths) const
 {
     // your code here
+    std::vector<T> vec;
+	paths.push_back(vec);
+    getPaths(root, paths);
+	paths.pop_back();
+	for (unsigned i = 0; i < paths.size(); i++) {
+		std::cout<<"------------------------"<<std::endl;	
+		for(unsigned j = 0; j < paths.at(i).size(); j++) {
+			std::cout<<paths.at(i).at(j)<<std::endl;
+		}
+	}
 }
 
+template <typename T>
+void BinaryTree<T>::getPaths(Node* subroot, std::vector<std::vector<T>>& paths) const {
+	if (subroot == NULL) {
+		return;
+	}
+	
+	if ( subroot->left == NULL && subroot->right == NULL) {
+		paths.back().push_back(subroot->elem);
+		std::vector<T> vec = paths.back();
+		vec.pop_back();
+		paths.push_back(vec);
+		return;
+	} else {
+		paths.back().push_back(subroot->elem);
+		getPaths(subroot->left, paths);
+		getPaths(subroot->right, paths);
+		paths.back().pop_back();
+	}
+}
 
+//template <typename T>
+//std::vector<T> BinaryTree<T>::addPath(Node* subroot, std::vector<T>& path)  {
+//	if (subroot == NULL) {
+//		return NULL;
+//	}
+//	
+//	if (subroot->left == NULL && subroot->right == NULL) {
+//		return path;
+//	} else {
+//		path.push_back(subroot->elem);
+//		addPath(subroot->left, path);
+//		addPath(subroot->right,path);
+//	}
+//}
 /**
  * Each node in a tree has a distance from the root node - the depth of that
  * node, or the number of edges along the path from that node to the root. This

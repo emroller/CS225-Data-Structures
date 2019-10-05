@@ -173,6 +173,7 @@ class BinaryTree
 
     private:
 	void myInOrder(Node* subRoot, std::vector<T>& treeVector) const;
+	void getPaths(Node* subroot, std::vector<std::vector<T>>& paths) const;
 	bool isOrderedRecursive(Node* subroot, T min, T max) const;
 	bool isOrderedIterative(Node* subRoot) const;
         /**
