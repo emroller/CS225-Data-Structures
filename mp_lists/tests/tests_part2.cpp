@@ -71,6 +71,7 @@ List<int> mylist;
   INFO("Output image `out` saved as actual-reverseN_1.png");
 
   REQUIRE( out == expected );
+std::cout<<"here"<<std::endl;
 }
 
 TEST_CASE("List::reverseNth #2", "[weight=5][part=2]") {
@@ -120,6 +121,21 @@ TEST_CASE("List::merge", "[weight=10][part=2][valgrind]") {
   INFO("Output image `out` saved as actual-merge.png");
 
   REQUIRE( out == expected );
+
+	List<int> list1;
+	list1.insertBack(0);
+	list1.insertBack(2);
+	list1.insertBack(3);
+
+	List<int> list2;
+	list2.insertBack(1);
+	list2.insertBack(4);
+	list2.insertBack(6);
+
+	//merge(list1.head_, list2.head_);
+	//stringstream st;
+	//list1.print(st);
+	//REQUIRE(st.str() == "< 0 1 2 3 4 6 >";
 }
 
 TEST_CASE("List::sort simple #1", "[weight=2][part=2][valgrind]") {
