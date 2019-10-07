@@ -301,6 +301,7 @@ typename List<T>::ListNode * List<T>::merge(ListNode * first, ListNode* second) 
 			second->prev = curr;
 			second = second->next;
 		}
+
 		curr = curr->next;
 	
 		// if one list runs of out nodes before the other, append the rest of the longer list
@@ -330,5 +331,22 @@ typename List<T>::ListNode * List<T>::merge(ListNode * first, ListNode* second) 
 template <typename T>
 typename List<T>::ListNode* List<T>::mergesort(ListNode * start, int chainLength) {
   /// @todo Graded in MP3.2
-  return NULL;
+std::cout<<"start: " <<start->data<<std::endl;
+std::cout<<"length: " <<chainLength<<std::endl;
+std::cout<<"------------------"<<std::endl;
+	if (start == NULL || start->next == NULL) {
+		return start;
+	}
+	
+	ListNode* other = start;
+	int half = chainLength / 2;		//rounds down for odd numbers
+	for (int i = 0; i < half; i++) {
+		other = other->next;
+	}
+	other->prev->next = NULL;
+  	other->prev = NULL;
+	
+	mergesort(start, half);
+	mergesort(other, chainLength - half);
+	return merge(start, other);
 }
