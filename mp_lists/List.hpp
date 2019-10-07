@@ -205,21 +205,41 @@ void List<T>::reverse(ListNode *& startPoint, ListNode *& endPoint) {
   /// @todo Graded in MP3.2
 	if (startPoint == endPoint) {
 		return;
-	} 
+	}
+	ListNode* start = startPoint;
+	ListNode* end = endPoint; 
+
 	ListNode* curr = startPoint;
 	ListNode* temp = NULL;
+
+	ListNode* startPrev = startPoint->prev;
+  	ListNode* endNext = endPoint->next;	
 	
-	while (curr != NULL) {
+	while (curr != endPoint) {
 		temp = curr->prev;
 		curr->prev = curr->next;
 		curr->next = temp;
 		curr = curr->prev;
 	}
-	if (temp != NULL) { 
-        	startPoint = temp->prev; 
-		endPoint = temp->next;
-		std::cout<<"here"<<std::endl;
-	}
+	
+	curr->next = curr->prev;
+  	curr->prev = startPrev;
+  	startPoint->next = endNext;
+	
+	if(startPrev != NULL){
+	    startPrev->next = endPoint;
+  	} else{
+   	    head_ = endPoint;
+  	}
+
+	if (endNext != NULL){
+  		endNext->prev = startPoint;
+	} else {
+  		tail_ = startPoint;
+  	}
+
+	startPoint = end;
+	endPoint = start;
 
 }
 
@@ -232,16 +252,17 @@ void List<T>::reverse(ListNode *& startPoint, ListNode *& endPoint) {
 template <typename T>
 void List<T>::reverseNth(int n) {
   /// @todo Graded in MP3.2
-	ListNode*& start = head_;
+	ListNode* start = head_;
 	ListNode* end = head_; 
 	int position = 0;
-	for (int i = 0; i < length_ && end->next->next != NULL; i++) {
+	for (int i = 0; i < length_; i++) {
 		if (i == position + n-1) {
 			reverse(start, end);
 			position += n;
 			start = end->next;
 		}
-		end = end->next;
+	end = end->next;
+		
 	}
 }
 
@@ -272,7 +293,7 @@ void List<T>::mergeWith(List<T> & otherList) {
 
 /**
  * Helper function to merge two **sorted** and **independent** sequences of
- * linked memory. The result should be a single sequence that is itself
+ * linked memory. The esult should be a single sequence that is itself
  * sorted.
  *
  * This function **SHOULD NOT** create **ANY** new List objects.
