@@ -286,11 +286,18 @@ typename List<T>::ListNode * List<T>::merge(ListNode * first, ListNode* second) 
 	if (first == NULL) { return second; }
 	if (second == NULL) { return first; }
 
-	ListNode* node = first;
-	ListNode* curr = node;
+	ListNode* node;
 
-	first = first->next;
-	
+	// we need the starting node to be the smaller of first and second
+	if (first->data < second->data) {
+		 node = first;
+		first = first->next;
+	} else {
+		node = second;
+		second = second->next;
+	} 	
+
+	ListNode* curr = node;
 	while (first != NULL && second != NULL) {
 		if (first->data < second->data) {
 			curr->next = first;
