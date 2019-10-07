@@ -288,7 +288,7 @@ class List {
      * @return The starting node of the resulting, sorted sequence.
      */
     ListNode* merge(ListNode* first, ListNode* second);
-
+	ListNode* sortedMerge(ListNode* first, ListNode* second);
     /**
      * Sorts a chain of linked memory given a start node and a size.
      * This is the recursive helper for the Mergesort algorithm

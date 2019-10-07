@@ -168,6 +168,10 @@ TEST_CASE("List::split images", "[weight=5][part=1]") {
     REQUIRE(out3 == expected_3);
 }
 
+TEST_CASE("List::split edge cases") {
+	
+}
+
 TEST_CASE("List::_destroy empty list", "[weight=3][part=1][valgrind]") {
 
     List<int>* list = new List<int>();

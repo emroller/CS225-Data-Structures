@@ -146,7 +146,8 @@ typename List<T>::ListNode * List<T>::split(ListNode * start, int splitPoint) {
   	curr = curr->next;
   	}
 //TODO: check for edge cases
-
+	newStart->prev->next = NULL;
+	newStart->prev = NULL;
   return newStart;
 }
 
@@ -283,21 +284,23 @@ void List<T>::mergeWith(List<T> & otherList) {
 template <typename T>
 typename List<T>::ListNode * List<T>::merge(ListNode * first, ListNode* second) {
   /// @todo Graded in MP3.2
-	if (first == NULL) { return second; }
-	if (second == NULL) { return first; }
+	if (first == NULL && second != NULL) { return second; }
+	if (first != NULL && second == NULL) { return first; }
 
 	ListNode* node;
+	ListNode* curr;
 
 	// we need the starting node to be the smaller of first and second
 	if (first->data < second->data) {
 		 node = first;
 		first = first->next;
+		curr = node;
 	} else {
 		node = second;
 		second = second->next;
+		curr = node;
 	} 	
 
-	ListNode* curr = node;
 	while (first != NULL && second != NULL) {
 		if (first->data < second->data) {
 			curr->next = first;
@@ -323,7 +326,21 @@ typename List<T>::ListNode * List<T>::merge(ListNode * first, ListNode* second) 
 
 	return node;
 }
-
+template <typename T>
+typename List<T>::ListNode* List<T>::sortedMerge(ListNode * first, ListNode* second) {
+	if (first == NULL && second != NULL) {return second;}
+	if (first != NULL && second == NULL) {return first;}
+	
+	ListNode* node = NULL;
+	if (first->data > second->data) {
+		node = second;
+		node->next = sortedMerge(first, second->next);
+	} else {
+		node = first;
+		node->next = sortedMerge(first->next, second);
+	}
+	return node;
+}
 /**
  * Sorts a chain of linked memory given a start node and a size.
  * This is the recursive helper for the Mergesort algorithm (i.e., this is
@@ -338,22 +355,17 @@ typename List<T>::ListNode * List<T>::merge(ListNode * first, ListNode* second) 
 template <typename T>
 typename List<T>::ListNode* List<T>::mergesort(ListNode * start, int chainLength) {
   /// @todo Graded in MP3.2
-std::cout<<"start: " <<start->data<<std::endl;
-std::cout<<"length: " <<chainLength<<std::endl;
-std::cout<<"------------------"<<std::endl;
 	if (start == NULL || start->next == NULL) {
 		return start;
 	}
 	
-	ListNode* other = start;
 	int half = chainLength / 2;		//rounds down for odd numbers
-	for (int i = 0; i < half; i++) {
-		other = other->next;
-	}
-	other->prev->next = NULL;
-  	other->prev = NULL;
+	//for (int i = 0; i < half; i++) {
+	//	other = other->next;
+	//}
+	ListNode* other = split(start, half);	
 	
-	mergesort(start, half);
-	mergesort(other, chainLength - half);
-	return merge(start, other);
+	start = mergesort(start, half);
+	other = mergesort(other, chainLength - half);
+	return sortedMerge(start, other);
 }

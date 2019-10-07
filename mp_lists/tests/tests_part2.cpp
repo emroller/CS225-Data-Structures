@@ -138,6 +138,23 @@ TEST_CASE("List::merge", "[weight=10][part=2][valgrind]") {
 	list1.print(st);
 
 	REQUIRE(st.str() == "< 0 1 3 4 5 6 >");
+	
+	List<int> list3;
+	list3.insertBack(0);
+	list3.insertBack(5);
+	list3.insertBack(5);
+
+	List<int> list4;
+	list4.insertBack(1);
+	list4.insertBack(4);
+	list4.insertBack(6);
+
+	list3.mergeWith(list4);
+	REQUIRE(list3.size() == 6);
+	stringstream st2;
+	list3.print(st2);
+
+	REQUIRE(st2.str() == "< 0 1 4 5 5 6 >");
 }
 
 TEST_CASE("List::sort simple #1", "[weight=2][part=2][valgrind]") {
@@ -145,14 +162,15 @@ TEST_CASE("List::sort simple #1", "[weight=2][part=2][valgrind]") {
 
     list.insertBack(2);
     list.insertBack(5);
-    list.insertBack(2);
+    list.insertBack(4);
+	list.insertBack(1);
 
     list.sort();
 
     stringstream s;
     list.print(s);
 
-    REQUIRE(s.str() == "< 2 2 5 >");
+    REQUIRE(s.str() == "< 1 2 4 5 >");
 }
 
 TEST_CASE("List::sort simple #2", "[weight=2][part=2][valgrind]") {
