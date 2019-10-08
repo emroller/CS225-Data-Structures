@@ -98,7 +98,28 @@ TEST_CASE("List::reverseNth #2", "[weight=5][part=2]") {
 
   REQUIRE( out == expected );
 }
+TEST_CASE("List::reverseNth #3") {
+	List<int> list;
 
+	list.insertBack(1);
+	list.insertBack(2);
+	list.insertBack(3);
+	list.insertBack(4);
+	list.insertBack(5);
+	list.insertBack(6);
+	list.insertBack(7);
+	list.insertBack(8);
+	list.insertBack(9);
+	list.insertBack(10);
+	list.insertBack(11);
+
+	list.reverseNth(4);
+    stringstream s;
+    list.print(s);
+
+    REQUIRE(s.str() == "< 4 3 2 1 8 7 6 5 11 10 9 >");
+	
+}
 
 TEST_CASE("List::merge", "[weight=10][part=2][valgrind]") {
   PNG im1;       im1.readFromFile("tests/merge1.png");

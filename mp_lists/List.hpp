@@ -124,15 +124,14 @@ void List<T>::insertBack(const T & ndata) {
 template <typename T>
 typename List<T>::ListNode * List<T>::split(ListNode * start, int splitPoint) {
   /// @todo Graded in MP3.1
- 
-	if (splitPoint == 0) {
-		start->prev->next = NULL;
-		start->prev = NULL;
-	}
- 
-	if (start == NULL) {
+ 	if (start == NULL || splitPoint >= length_) {
 		return NULL;
 	}
+
+	if (splitPoint <= 0) {
+		return start;
+	}
+ 
 
 	ListNode * curr = start;
 	ListNode* newStart = start;
@@ -226,9 +225,9 @@ void List<T>::reverse(ListNode *& startPoint, ListNode *& endPoint) {
   	curr->prev = startPrev;
   	startPoint->next = endNext;
 	
-	if(startPrev != NULL){
+	if (startPrev != NULL){
 	    startPrev->next = endPoint;
-  	} else{
+  	} else {
    	    head_ = endPoint;
   	}
 
@@ -256,7 +255,7 @@ void List<T>::reverseNth(int n) {
 	ListNode* end = head_; 
 	int position = 0;
 	for (int i = 0; i < length_; i++) {
-		if (i == position + n-1) {
+		if (i == position + n-1 || i == length_ - 1) {
 			reverse(start, end);
 			position += n;
 			start = end->next;
