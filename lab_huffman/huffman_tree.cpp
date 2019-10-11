@@ -132,8 +132,10 @@ void HuffmanTree::buildTree(const vector<Frequency>& frequencies)
 	
 	if (singleQueue.size() == 1) {
 		root_ = singleQueue.front();
+		singleQueue.pop();
 	} else {
 		root_ = mergeQueue.front();
+		mergeQueue.pop();
 	}
     /**
      * @todo Your code here!
@@ -168,9 +170,9 @@ void HuffmanTree::decode(stringstream& ss, BinaryFileReader& bfile)
     while (bfile.hasBits()) {
 		bool bit = bfile.getNextBit();
 
-		if (bit == 0) {
+		if (!bit) {
 			current = current->left;
-		} else if (bit == 1) {
+		} else if (bit) {
 			current = current->right;
 		}
 		 if (current->left == NULL && current->right == NULL) {
@@ -213,12 +215,11 @@ void HuffmanTree::writeTree(TreeNode* current, BinaryFileWriter& bfile)
      * version: this is fine, as the structure of the tree still reflects
      * what the relative frequencies were.
      */
-
 	if (current->left == NULL && current->right == NULL) {
-		bfile.writeBit(true);
+		bfile.writeBit(1);
 		bfile.writeByte(current->freq.getCharacter());
 	} else {
-		bfile.writeBit(false);
+		bfile.writeBit(0);
 		writeTree(current->left, bfile);
 		writeTree(current->right, bfile);
 	}
@@ -242,21 +243,21 @@ HuffmanTree::TreeNode* HuffmanTree::readTree(BinaryFileReader& bfile)
      *      4. Your function should return the TreeNode it creates, or NULL
      *         if it did not create one.
      */
-	TreeNode* newNode = NULL;
-	if (!bfile.hasBits()) {
-		return NULL;
+	while (bfile.hasBits()) {
+		if (bfile.getNextBit()) {
+			Frequency* fr = new Frequency(bfile.getNextByte(), 0);
+			TreeNode* newNode = new TreeNode(*fr);
+			return newNode;
+		}
+		else {
+			TreeNode* newNode = new TreeNode(0);
+			newNode->left = readTree(bfile);
+			newNode->right = readTree(bfile);
+			return newNode;
+		}
 	}
-	if (bfile.getNextBit()) {
-		Frequency* fr = new Frequency(bfile.getNextByte(), 0);
-		newNode = new TreeNode(*fr);
-		return newNode;
-	}
-	if (!bfile.getNextBit()) {
-		newNode = new TreeNode(0);
-		newNode->left = readTree(bfile);
-		newNode->left = readTree(bfile);
-	}
-    return newNode;
+	
+    return NULL;
 }
 
 void HuffmanTree::buildMap(TreeNode* current, vector<bool>& path)
