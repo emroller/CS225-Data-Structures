@@ -57,7 +57,9 @@ ImageTraversal::Iterator DFS::end() {
  */
 void DFS::add(const Point & point) {
   /** @todo [Part 1] */
-	traversal_.push_back(point);	// don't think this is right
+	//if (calculateDelta(png.getPixel(point.x, point.y), png.getPixel(start_.x, start_.y) < tolerance_) {
+		traversal_.push_back(point);	// don't think this is right
+	//}
 }
 
 /**

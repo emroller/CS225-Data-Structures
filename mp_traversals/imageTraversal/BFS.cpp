@@ -13,7 +13,7 @@
 #include "BFS.h"
 
 using namespace cs225;
-
+using std::vector;
 /**
  * Initializes a breadth-first ImageTraversal on a given `png` image,
  * starting at `start`, and with a given `tolerance`.
@@ -24,6 +24,15 @@ using namespace cs225;
  */
 BFS::BFS(const PNG & png, const Point & start, double tolerance) {  
   /** @todo [Part 1] */
+	png_ = png;
+	start_ = start;
+	tolerance_ = tolerance;	
+	for (unsigned int x = 0; x < png.width(); x++) {
+		vector<bool> vect(png.height(), false);		// vec<bool> of size height, all false	
+		visited_points_.push_back(vect);
+	}
+	visited_points_.at(start.x).at(start.y) = true;
+	traversal_.push(start);	
 }
 
 /**
@@ -47,6 +56,7 @@ ImageTraversal::Iterator BFS::end() {
  */
 void BFS::add(const Point & point) {
   /** @todo [Part 1] */
+	traversal_.push(point);
 }
 
 /**
@@ -54,7 +64,9 @@ void BFS::add(const Point & point) {
  */
 Point BFS::pop() {
   /** @todo [Part 1] */
-  return Point(0, 0);
+	Point first = traversal_.front();
+	traversal_.pop();
+	return first;
 }
 
 /**
@@ -62,7 +74,7 @@ Point BFS::pop() {
  */
 Point BFS::peek() const {
   /** @todo [Part 1] */
-  return Point(0, 0);
+  return traversal_.front();
 }
 
 /**
@@ -70,5 +82,5 @@ Point BFS::peek() const {
  */
 bool BFS::empty() const {
   /** @todo [Part 1] */
-  return true;
+  return traversal_.size() == 0;
 }
