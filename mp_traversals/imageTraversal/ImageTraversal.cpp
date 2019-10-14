@@ -35,9 +35,11 @@ ImageTraversal::Iterator::Iterator() {
   /** @todo [Part 1] */
 }
 
-ImageTraversal::Iterator::Iterator(ImageTraversal& traversal, Point point) {
-	traversal_ = &traversal;
+ImageTraversal::Iterator::Iterator(ImageTraversal* traversal, Point point, PNG png, double tolerance) {
+	traversal_ = traversal;
 	point_ = point;
+	png_ = png;
+	tolerance_ = tolerance;
 }
 /**
  * Iterator increment opreator.
