@@ -39,4 +39,5 @@ private:
 	Point start_;
 	double tolerance_;
 	std::vector<std::vector<bool>> visited_points_;
+	std::vector<Point> traversal_;
 };
