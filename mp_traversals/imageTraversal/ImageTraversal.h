@@ -29,6 +29,7 @@ public:
   class Iterator : std::iterator<std::forward_iterator_tag, Point> {
   public:
     Iterator();
+	Iterator(ImageTraversal& traversal, Point point);
 
     Iterator & operator++();
     Point operator*();
@@ -40,7 +41,8 @@ public:
   private:
     /** @todo [Part 1] */
     /** add private members here if neccesary*/
-
+	Point point_;
+	ImageTraversal* traversal_;
   };
 
   /**

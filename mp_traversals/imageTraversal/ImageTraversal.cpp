@@ -35,6 +35,10 @@ ImageTraversal::Iterator::Iterator() {
   /** @todo [Part 1] */
 }
 
+ImageTraversal::Iterator::Iterator(ImageTraversal& traversal, Point point) {
+	traversal_ = &traversal;
+	point_ = point;
+}
 /**
  * Iterator increment opreator.
  *
@@ -52,7 +56,7 @@ ImageTraversal::Iterator & ImageTraversal::Iterator::operator++() {
  */
 Point ImageTraversal::Iterator::operator*() {
   /** @todo [Part 1] */
-  return Point(0, 0);
+  return point_;
 }
 
 /**
@@ -62,6 +66,7 @@ Point ImageTraversal::Iterator::operator*() {
  */
 bool ImageTraversal::Iterator::operator!=(const ImageTraversal::Iterator &other) {
   /** @todo [Part 1] */
+ //  !(point_.x == other.point_.x && point_.y == other.point_.y);
   return false;
 }
 
