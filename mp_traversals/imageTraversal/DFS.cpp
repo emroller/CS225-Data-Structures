@@ -27,11 +27,11 @@ DFS::DFS(const PNG & png, const Point & start, double tolerance) {
 	start_ = start;
 	tolerance_ = tolerance;
 	// initialize the 2D vector of booleans - all false
-	for (unsigned int x = 0; x < png.width(); x++) {
-		vector<bool> vect(png.height(), false);		// vec<bool> of size height, all false	
-		visited_points_.push_back(vect);
-	}
-	visited_points_.at(start_.x).at(start_.y) = true;
+//	for (unsigned int x = 0; x < png.width(); x++) {
+//		vector<bool> vect(png.height(), false);		// vec<bool> of size height, all false	
+//		visited_points_.push_back(vect);
+//	}
+//	visited_points_[start_.x][start_.y] = true;
 	traversal_.push(start);
 }
 

@@ -39,5 +39,5 @@ private:
 	PNG png_;
 	double tolerance_;
 	std::queue<Point> traversal_;	
-	std::vector<std::vector<bool>> visited_points_;
+//	std::vector<std::vector<bool>> visited_points_;
 };

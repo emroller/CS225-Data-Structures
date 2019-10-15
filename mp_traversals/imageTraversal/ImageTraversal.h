@@ -28,7 +28,8 @@ public:
   /**
    * A forward iterator through an ImageTraversal.
    */
-    std::vector<std::vector<bool>> visited_points_;
+
+    //std::vector<std::vector<bool>> visited_points_;
   class Iterator : std::iterator<std::forward_iterator_tag, Point> {
   public:
     Iterator();
@@ -47,6 +48,7 @@ public:
 	ImageTraversal* traversal_;
 	PNG png_;
 	double tolerance_;
+	std::vector<std::vector<bool>> visited_points_;
   };
 
   /**
