@@ -38,6 +38,6 @@ private:
 	PNG png_;
 	Point start_;
 	double tolerance_;
+	std::stack<Point> traversal_;
 	std::vector<std::vector<bool>> visited_points_;
-	std::vector<Point> traversal_;
 };

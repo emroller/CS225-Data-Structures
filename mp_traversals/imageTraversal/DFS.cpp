@@ -4,7 +4,6 @@
 #include <list>
 #include <queue>
 #include <stack>
-#include <vector>
 
 #include "../cs225/PNG.h"
 #include "../Point.h"
@@ -32,8 +31,8 @@ DFS::DFS(const PNG & png, const Point & start, double tolerance) {
 		vector<bool> vect(png.height(), false);		// vec<bool> of size height, all false	
 		visited_points_.push_back(vect);
 	}
-	visited_points_.at(start.x).at(start.y) = true;
-	traversal_.push_back(start);
+	visited_points_.at(start_.x).at(start_.y) = true;
+	traversal_.push(start);
 }
 
 /**
@@ -58,7 +57,7 @@ ImageTraversal::Iterator DFS::end() {
 void DFS::add(const Point & point) {
   /** @todo [Part 1] */
 	//if (calculateDelta(png.getPixel(point.x, point.y), png.getPixel(start_.x, start_.y) < tolerance_) {
-		traversal_.push_back(point);	// don't think this is right
+		traversal_.push(point);	// don't think this is right
 	//}
 }
 
@@ -67,8 +66,8 @@ void DFS::add(const Point & point) {
  */
 Point DFS::pop() {
   /** @todo [Part 1] */
-    Point last = traversal_.back();
-	traversal_.pop_back();
+    Point last = traversal_.top();
+	traversal_.pop();
 	return last;
 }
 
@@ -77,7 +76,7 @@ Point DFS::pop() {
  */
 Point DFS::peek() const {
   /** @todo [Part 1] */
-  return traversal_.back();
+  return traversal_.top();
 }
 
 /**

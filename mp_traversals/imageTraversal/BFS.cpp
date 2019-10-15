@@ -31,8 +31,8 @@ BFS::BFS(const PNG & png, const Point & start, double tolerance) {
 		vector<bool> vect(png.height(), false);		// vec<bool> of size height, all false	
 		visited_points_.push_back(vect);
 	}
-	visited_points_.at(start.x).at(start.y) = true;
-	traversal_.push(start);	
+	visited_points_.at(start_.x).at(start_.y) = true;	
+	traversal_.push(start);
 }
 
 /**
