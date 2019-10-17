@@ -26,13 +26,7 @@ DFS::DFS(const PNG & png, const Point & start, double tolerance) {
 	png_ = png;
 	start_ = start;
 	tolerance_ = tolerance;
-	// initialize the 2D vector of booleans - all false
-//	for (unsigned int x = 0; x < png.width(); x++) {
-//		vector<bool> vect(png.height(), false);		// vec<bool> of size height, all false	
-//		visited_points_.push_back(vect);
-//	}
-//	visited_points_[start_.x][start_.y] = true;
-	traversal_.push(start);
+	traversal_points_.push(start);
 }
 
 /**
@@ -40,7 +34,8 @@ DFS::DFS(const PNG & png, const Point & start, double tolerance) {
  */
 ImageTraversal::Iterator DFS::begin() {
   /** @todo [Part 1] */
-  return ImageTraversal::Iterator(this, start_, png_, tolerance_);
+	DFS* d = new DFS(png_, start_, tolerance_);
+  return ImageTraversal::Iterator(d, start_, png_, tolerance_);
 }
 
 /**
@@ -57,7 +52,8 @@ ImageTraversal::Iterator DFS::end() {
 void DFS::add(const Point & point) {
   /** @todo [Part 1] */
 	//if (calculateDelta(png.getPixel(point.x, point.y), png.getPixel(start_.x, start_.y) < tolerance_) {
-		traversal_.push(point);	// don't think this is right
+		traversal_points_.push(point);	// don't think this is right
+		std::cout<<"top element: "<<traversal_points_.top()<<std::endl;
 	//}
 }
 
@@ -66,8 +62,8 @@ void DFS::add(const Point & point) {
  */
 Point DFS::pop() {
   /** @todo [Part 1] */
-    Point last = traversal_.top();
-	traversal_.pop();
+    Point last = traversal_points_.top();
+	traversal_points_.pop();
 	return last;
 }
 
@@ -76,7 +72,7 @@ Point DFS::pop() {
  */
 Point DFS::peek() const {
   /** @todo [Part 1] */
-  return traversal_.top();
+  return traversal_points_.top();
 }
 
 /**
@@ -84,6 +80,5 @@ Point DFS::peek() const {
  */
 bool DFS::empty() const {
   /** @todo [Part 1] */
-  return traversal_.size() == 0;
-
+  return traversal_points_.size() == 0;
 }

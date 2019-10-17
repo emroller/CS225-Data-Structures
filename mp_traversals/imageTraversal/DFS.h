@@ -32,12 +32,11 @@ public:
   Point peek() const;
   bool empty() const;
 
-private:
 	/** @todo [Part 1] */
 	/** add private members here*/
 	PNG png_;
 	Point start_;
 	double tolerance_;
-	std::stack<Point> traversal_;
+	std::stack<Point> traversal_points_;
 //	std::vector<std::vector<bool>> visited_points_;
 };

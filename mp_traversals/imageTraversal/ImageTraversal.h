@@ -44,11 +44,12 @@ public:
   private:
     /** @todo [Part 1] */
     /** add private members here if neccesary*/
+	Point start_;
 	Point current_;
 	ImageTraversal* traversal_;
 	PNG png_;
 	double tolerance_;
-	std::vector<std::vector<bool>> visited_points_;
+	std::vector<std::vector<bool>> visited_points_; // make a pointer
   };
 
   /**
@@ -85,5 +86,5 @@ public:
   virtual bool empty() const = 0;
 
 private:
-	 static double calculateDelta(const HSLAPixel & p1, const HSLAPixel & p2);  
+	static double calculateDelta(const HSLAPixel & p1, const HSLAPixel & p2);  
 };

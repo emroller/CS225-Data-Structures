@@ -38,6 +38,6 @@ private:
 	Point start_;
 	PNG png_;
 	double tolerance_;
-	std::queue<Point> traversal_;	
+	std::queue<Point> traversal_points_;	
 //	std::vector<std::vector<bool>> visited_points_;
 };
