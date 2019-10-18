@@ -53,7 +53,7 @@ void DFS::add(const Point & point) {
   /** @todo [Part 1] */
 	//if (calculateDelta(png.getPixel(point.x, point.y), png.getPixel(start_.x, start_.y) < tolerance_) {
 		traversal_points_.push(point);	// don't think this is right
-		std::cout<<"top element: "<<traversal_points_.top()<<std::endl;
+//		std::cout<<"top element: "<<traversal_points_.top()<<std::endl;
 	//}
 }
 

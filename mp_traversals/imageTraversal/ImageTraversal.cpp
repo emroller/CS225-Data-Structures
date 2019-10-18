@@ -45,7 +45,7 @@ ImageTraversal::Iterator::Iterator(ImageTraversal* traversal, Point point, PNG p
 	start_ = point;
 	png_ = png;
 	tolerance_ = tolerance;
-	for (unsigned int x = 0; x < png_.width(); x++) {
+	for (int x = 0; x < (int)png_.width(); x++) {
 		visited_points_.push_back(vector<bool> (png_.height(), false));		// vec<bool> of size height, all false	
 	}
 	visited_points_[current_.x][current_.y] = true;
@@ -58,11 +58,9 @@ ImageTraversal::Iterator::Iterator(ImageTraversal* traversal, Point point, PNG p
 ImageTraversal::Iterator & ImageTraversal::Iterator::operator++() {
   /** @todo [Part 1] */
 	// get the first point in the traversal
-	if (!traversal_->empty()) {
-	 	current_ = traversal_->pop();
-	}
 
-
+	current_ = traversal_->pop();
+		std::cout<<"current: "<<current_<<std::endl;
 		int x = current_.x;
 		int y = current_.y;
 		int height = png_.height();
@@ -72,52 +70,56 @@ ImageTraversal::Iterator & ImageTraversal::Iterator::operator++() {
 	HSLAPixel startPix = png_.getPixel(start_.x, start_.y);
 	
 	// print the png's visited values TODO: delete this
-	std::cout<<"Printing visited values: "<<std::endl;
-	for (unsigned int i = 0 ; i <  visited_points_.size(); i++) {
-		for (unsigned int j = 0; j < visited_points_[i].size(); j++) {
-			std::cout<<visited_points_[i][j];
-		}
-		std::cout<<""<<std::endl;
-	}		
+	//std::cout<<"Printing visited values: "<<std::endl;
+	//for (unsigned int i = 0 ; i <  visited_points_.size(); i++) {
+	//	for (unsigned int j = 0; j < visited_points_[i].size(); j++) {
+	//		std::cout<<visited_points_[i][j];
+	//	}
+	//	std::cout<<""<<std::endl;
+	//}		
 	// for each neightbor, make sure it's in bounds and hasn't already been visited
 	
 	// RIGHT
-	if (x + 1 < width && x + 1 >= 0 && !visited_points_[x + 1][y]) {
+	if (x + 1 < width && !visited_points_[x + 1][y]) {
 		double delta = calculateDelta(png_.getPixel(x + 1, y), startPix);
-		if (delta <  tolerance_) {
+		if (delta <=  tolerance_) {
 			Point right = Point(x + 1, y);
 			traversal_->add(right);
 		}	
 	}
 
 	// BELOW
-	if (y + 1 < height && y + 1 >= 0 && !visited_points_[x][y + 1]) {
+	if (y + 1 < height && !visited_points_[x][y + 1]) {
 		double delta = calculateDelta(png_.getPixel(x, y + 1), startPix);
-		if (delta < tolerance_) {
+		if (delta <= tolerance_) {
 			Point below = Point(x, y + 1);
 			traversal_->add(below);
 		}	
 	}
 
 	// LEFT
-	if (x <= width && x > 0 && !visited_points_[x - 1][y]) {		//used to be [curr.x-1]
+	if ( x > 0 && !visited_points_[x - 1][y]) {		//used to be [curr.x-1]
 		double delta = calculateDelta(png_.getPixel(x - 1, y), startPix);
-		if (delta < tolerance_) {
+		if (delta <= tolerance_) {
 			Point left = Point(x - 1, y);
 			traversal_->add(left);	
 		}	
 
 	}
 	// ABOVE
-	if (y <= height && y > 0 && !visited_points_[x][y - 1]) {		//used to be [curr.y - 1]
+	if ( y > 0 && !visited_points_[x][y - 1]) {		//used to be [curr.y - 1]
 		double delta = calculateDelta(png_.getPixel(x, y - 1), startPix);
-		if (delta < tolerance_) {
+		if (delta <= tolerance_) {
 			Point above = Point(x, y - 1);
 			traversal_->add(above);	
 		}	
 
 	}
 
+	int size = visited_points_.size();
+	if (!traversal_->empty()) {
+	 	current_ = traversal_->peek();
+	}
 	visited_points_[x][ y] = true;
 	return *this;
 }

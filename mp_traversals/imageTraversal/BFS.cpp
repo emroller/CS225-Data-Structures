@@ -53,7 +53,7 @@ ImageTraversal::Iterator BFS::end() {
 void BFS::add(const Point & point) {
   /** @todo [Part 1] */
 	traversal_points_.push(point);
-	std::cout<<"front element: "<<traversal_points_.front()<<std::endl;
+//	std::cout<<"front element: "<<traversal_points_.front()<<std::endl;
 }
 
 /**

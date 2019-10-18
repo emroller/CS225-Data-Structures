@@ -30,6 +30,10 @@ void AVLTree<K, V>::rotateLeft(Node*& t)
 {
     functionCalls.push_back("rotateLeft"); // Stores the rotation name (don't remove this)
     // your code here
+    Node* n = t;
+	Node* l = n->left;
+	n->left = l->right;
+	l->right = n;
 }
 
 template <class K, class V>
@@ -46,6 +50,10 @@ void AVLTree<K, V>::rotateRight(Node*& t)
 {
     functionCalls.push_back("rotateRight"); // Stores the rotation name (don't remove this)
     // your code here
+    Node* n = t;
+	Node* l = n->left;
+	n->left = l->right;
+	l->right = n;
 }
 
 template <class K, class V>
@@ -53,12 +61,32 @@ void AVLTree<K, V>::rotateRightLeft(Node*& t)
 {
     functionCalls.push_back("rotateRightLeft"); // Stores the rotation name (don't remove this)
     // your code here
+	rotateRight(t->right);
+	rotateLeft(t);
 }
 
 template <class K, class V>
 void AVLTree<K, V>::rebalance(Node*& subtree)
 {
     // your code here
+   	int balance = heightOrNeg1(subtree->right) - heightOrNeg1(subtree->left);
+
+	if (balance == -2) {
+		int l_balance = heightOrNeg1(subtree->left->right) - height(subtree->left->left);
+		if (l_balance == -1) {
+			rotateRight(subtree);
+		} else {
+			rotateLeftRight(subtree);
+		}
+	} else if (balance == 2) {
+		int r_balance = heightOrNeg1(subtree->right->right) - heightOrNeg1(subtree->right->left);
+		if (r_balance == 1) {
+			rotateLeft(subtree);
+		} else {
+			rotateRightLeft(subtree);
+		}
+	}
+	
 }
 
 template <class K, class V>
@@ -71,6 +99,25 @@ template <class K, class V>
 void AVLTree<K, V>::insert(Node*& subtree, const K& key, const V& value)
 {
     // your code here
+	 if (root == NULL) {
+		return new Node(key, value);
+	}
+	if (key < root->key) {
+		root->left = insert(node->left, key, value);
+	} else if (key > root->key) {
+		node->right = insert(node->right, key, value);
+	} else {
+		return subtree;
+	}
+	
+	int balance = getHeightOrNeg1(subtree->right) - getHeightOrNeg1(subtree->left); 
+	rebalance(subtree);
+}
+
+template <class K, class V>
+//Node AVLTree<K, V>::bstInsert(Node*& root, const K& key, const V& value) {
+	
+	return root;
 }
 
 template <class K, class V>

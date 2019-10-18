@@ -124,7 +124,6 @@ class AVLTree
     * Gets vector of function calls.
     */
     std::vector<std::string> getFunctionOrder() const;
-
   private:
     /**
      * The root of the tree.
@@ -230,6 +229,7 @@ class AVLTree
 
     /** This variable tests the order of function calls **/
     std::vector<std::string> functionCalls;
+	//Node* bstInsert(Node*& root, const K& key, const V& value);
 };
 
 #include "avltree_given.cpp"
