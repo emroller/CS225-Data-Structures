@@ -54,6 +54,7 @@ TEST_CASE("DFS iterator visits all points in the correct order (7x4 image)", "[w
   REQUIRE( *it == Point(2, 1) ); ++it;
 
   REQUIRE( *it == Point(1, 1) ); ++it;
+
   REQUIRE( *it == Point(1, 2) ); ++it;
 
   REQUIRE( *it == Point(3, 1) ); ++it;

@@ -32,6 +32,7 @@ public:
     //std::vector<std::vector<bool>> visited_points_;
   class Iterator : std::iterator<std::forward_iterator_tag, Point> {
   public:
+	~Iterator();
     Iterator();
 	Iterator(ImageTraversal* traversal, Point point, PNG png, double tolerance);
 	Iterator & operator++();

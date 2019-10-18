@@ -29,6 +29,9 @@ double ImageTraversal::calculateDelta(const HSLAPixel & p1, const HSLAPixel & p2
   return sqrt( (h*h) + (s*s) + (l*l) );
 }
 
+ImageTraversal::Iterator::~Iterator() {
+}
+
 /**
  * Default iterator constructor.
  */
@@ -58,8 +61,15 @@ ImageTraversal::Iterator::Iterator(ImageTraversal* traversal, Point point, PNG p
 ImageTraversal::Iterator & ImageTraversal::Iterator::operator++() {
   /** @todo [Part 1] */
 	// get the first point in the traversal
+//	if (visited_points_[current_.x][current_.y]) {
+//		traversal_->pop();
+//		return *this;
+//	}
 
-	current_ = traversal_->pop();
+	if (!traversal_->empty()) {
+		current_ = traversal_->pop();
+	}
+
 		std::cout<<"current: "<<current_<<std::endl;
 		int x = current_.x;
 		int y = current_.y;
@@ -82,45 +92,53 @@ ImageTraversal::Iterator & ImageTraversal::Iterator::operator++() {
 	// RIGHT
 	if (x + 1 < width && !visited_points_[x + 1][y]) {
 		double delta = calculateDelta(png_.getPixel(x + 1, y), startPix);
-		if (delta <=  tolerance_) {
+		if (delta <  tolerance_) {
 			Point right = Point(x + 1, y);
 			traversal_->add(right);
+	//		visited_points_[x+1][y] = true;
 		}	
 	}
 
 	// BELOW
 	if (y + 1 < height && !visited_points_[x][y + 1]) {
 		double delta = calculateDelta(png_.getPixel(x, y + 1), startPix);
-		if (delta <= tolerance_) {
+		if (delta < tolerance_) {
 			Point below = Point(x, y + 1);
 			traversal_->add(below);
+	//		visited_points_[x][y+1] = true;
 		}	
 	}
 
 	// LEFT
 	if ( x > 0 && !visited_points_[x - 1][y]) {		//used to be [curr.x-1]
 		double delta = calculateDelta(png_.getPixel(x - 1, y), startPix);
-		if (delta <= tolerance_) {
+		if (delta < tolerance_) {
 			Point left = Point(x - 1, y);
 			traversal_->add(left);	
+	//		visited_points_[x-1][y] = true;
 		}	
 
 	}
 	// ABOVE
 	if ( y > 0 && !visited_points_[x][y - 1]) {		//used to be [curr.y - 1]
 		double delta = calculateDelta(png_.getPixel(x, y - 1), startPix);
-		if (delta <= tolerance_) {
+		if (delta < tolerance_) {
 			Point above = Point(x, y - 1);
 			traversal_->add(above);	
+	//		visited_points_[x][y-1] = true;
 		}	
 
 	}
 
-	int size = visited_points_.size();
-	if (!traversal_->empty()) {
-	 	current_ = traversal_->peek();
-	}
 	visited_points_[x][ y] = true;
+	while (!traversal_->empty()) {
+	 		current_ = traversal_->peek();
+			if (visited_points_[current_.x][current_.y]) {
+				traversal_->pop();
+			} else {
+				break;
+			}
+	}
 	return *this;
 }
 
@@ -141,6 +159,16 @@ Point ImageTraversal::Iterator::operator*() {
  */
 bool ImageTraversal::Iterator::operator!=(const ImageTraversal::Iterator &other) {
   /** @todo [Part 1] */
-	return !(current_ == other.current_ || tolerance_ != other.tolerance_);
+	bool thisEmpty = false; 
+    bool otherEmpty = false;
+
+    if (traversal_ == NULL) { thisEmpty = true; }
+    if (other.traversal_ == NULL) { otherEmpty = true; }
+
+    if (!thisEmpty)  { thisEmpty = traversal_->empty(); }
+    if (!otherEmpty) { otherEmpty = other.traversal_->empty(); }
+
+    if (thisEmpty && otherEmpty) return false; // both empty then the traversals are equal, return true
+    else return true; // one is empty while the other is not, return true
 }
 
