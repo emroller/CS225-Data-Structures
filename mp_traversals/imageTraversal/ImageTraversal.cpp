@@ -62,7 +62,15 @@ ImageTraversal::Iterator & ImageTraversal::Iterator::operator++() {
 	 	current_ = traversal_->pop();
 	}
 
+
+		int x = current_.x;
+		int y = current_.y;
+		int height = png_.height();
+		int width = png_.width();
+
+
 	HSLAPixel startPix = png_.getPixel(start_.x, start_.y);
+	
 	// print the png's visited values TODO: delete this
 	std::cout<<"Printing visited values: "<<std::endl;
 	for (unsigned int i = 0 ; i <  visited_points_.size(); i++) {
@@ -73,46 +81,44 @@ ImageTraversal::Iterator & ImageTraversal::Iterator::operator++() {
 	}		
 	// for each neightbor, make sure it's in bounds and hasn't already been visited
 	
-	std::cout<<traversal_<<std::endl;
 	// RIGHT
-	if (current_.x + 1 < png_.width() && !visited_points_[current_.x + 1][current_.y]) {
-		double delta = calculateDelta(png_.getPixel(current_.x + 1, current_.y), startPix);
+	if (x + 1 < width && x + 1 >= 0 && !visited_points_[x + 1][y]) {
+		double delta = calculateDelta(png_.getPixel(x + 1, y), startPix);
 		if (delta <  tolerance_) {
-			Point right = Point(current_.x + 1, current_.y);
+			Point right = Point(x + 1, y);
 			traversal_->add(right);
 		}	
 	}
 
 	// BELOW
-	if (current_.y + 1 < png_.height() && !visited_points_[current_.x][current_.y + 1]) {
-		double delta = calculateDelta(png_.getPixel(current_.x, current_.y + 1), startPix);
+	if (y + 1 < height && y + 1 >= 0 && !visited_points_[x][y + 1]) {
+		double delta = calculateDelta(png_.getPixel(x, y + 1), startPix);
 		if (delta < tolerance_) {
-			Point below = Point(current_.x, current_.y + 1);
+			Point below = Point(x, y + 1);
 			traversal_->add(below);
 		}	
 	}
 
 	// LEFT
-	if (current_.x > 0 && !visited_points_[current_.x - 1][current_.y]) {		//used to be [curr.x-1]
-		double delta = calculateDelta(png_.getPixel(current_.x - 1, current_.y), startPix);
+	if (x <= width && x > 0 && !visited_points_[x - 1][y]) {		//used to be [curr.x-1]
+		double delta = calculateDelta(png_.getPixel(x - 1, y), startPix);
 		if (delta < tolerance_) {
-			Point left = Point(current_.x - 1, current_.y);
+			Point left = Point(x - 1, y);
 			traversal_->add(left);	
 		}	
 
 	}
 	// ABOVE
-	if (current_.y > 0 && !visited_points_[current_.x][current_.y - 1]) {		//used to be [curr.y - 1]
-		double delta = calculateDelta(png_.getPixel(current_.x, current_.y - 1), startPix);
+	if (y <= height && y > 0 && !visited_points_[x][y - 1]) {		//used to be [curr.y - 1]
+		double delta = calculateDelta(png_.getPixel(x, y - 1), startPix);
 		if (delta < tolerance_) {
-			Point above = Point(current_.x, current_.y - 1);
+			Point above = Point(x, y - 1);
 			traversal_->add(above);	
 		}	
 
 	}
-	// TODO: what comes after adding the point's neighbors to the traversal?	
-//see if empty, if so then were done
-//if not empty then
+
+	visited_points_[x][ y] = true;
 	return *this;
 }
 
