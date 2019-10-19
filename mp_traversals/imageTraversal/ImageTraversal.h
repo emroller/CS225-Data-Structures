@@ -53,6 +53,7 @@ public:
 	std::vector<std::vector<bool>> visited_points_; // make a pointer
   };
 
+	virtual ~ImageTraversal();
   /**
    * The begining of an iterator
    * Virtual function. Derived class need to implement this

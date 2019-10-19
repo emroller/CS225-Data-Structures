@@ -22,6 +22,7 @@ using namespace cs225;
  */
 class BFS : public ImageTraversal {
 public:
+ ~BFS();
   BFS(const PNG & png, const Point & start, double tolerance);
 
   ImageTraversal::Iterator begin();

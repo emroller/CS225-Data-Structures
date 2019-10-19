@@ -30,8 +30,13 @@ double ImageTraversal::calculateDelta(const HSLAPixel & p1, const HSLAPixel & p2
 }
 
 ImageTraversal::Iterator::~Iterator() {
+	if (traversal_ == NULL) {
+		delete traversal_;
+	}
+	traversal_ = NULL;
 }
 
+ImageTraversal::~ImageTraversal() {}
 /**
  * Default iterator constructor.
  */

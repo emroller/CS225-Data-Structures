@@ -30,10 +30,11 @@ void AVLTree<K, V>::rotateLeft(Node*& t)
 {
     functionCalls.push_back("rotateLeft"); // Stores the rotation name (don't remove this)
     // your code here
-    Node* n = t;
-	Node* l = n->left;
-	n->left = l->right;
-	l->right = n;
+	Node* r = t->right;
+	t->right = r->left;
+	r->left = t;
+	t->height = 1 + std::max(heightOrNeg1(t->right), heightOrNeg1(t->left));
+	t = r;
 }
 
 template <class K, class V>
@@ -50,10 +51,11 @@ void AVLTree<K, V>::rotateRight(Node*& t)
 {
     functionCalls.push_back("rotateRight"); // Stores the rotation name (don't remove this)
     // your code here
-    Node* n = t;
-	Node* l = n->left;
-	n->left = l->right;
-	l->right = n;
+	Node* l = t->left;
+	t->left = l->right;
+	l->right = t;
+	t->height = 1 + std::max(heightOrNeg1(t->right), heightOrNeg1(t->left));
+	t = l;
 }
 
 template <class K, class V>
@@ -72,7 +74,7 @@ void AVLTree<K, V>::rebalance(Node*& subtree)
    	int balance = heightOrNeg1(subtree->right) - heightOrNeg1(subtree->left);
 
 	if (balance == -2) {
-		int l_balance = heightOrNeg1(subtree->left->right) - height(subtree->left->left);
+		int l_balance = heightOrNeg1(subtree->left->right) - heightOrNeg1(subtree->left->left);
 		if (l_balance == -1) {
 			rotateRight(subtree);
 		} else {
@@ -86,6 +88,7 @@ void AVLTree<K, V>::rebalance(Node*& subtree)
 			rotateRightLeft(subtree);
 		}
 	}
+	subtree->height = 1 + std::max(heightOrNeg1(subtree->left), heightOrNeg1(subtree->right));
 	
 }
 
@@ -96,29 +99,24 @@ void AVLTree<K, V>::insert(const K & key, const V & value)
 }
 
 template <class K, class V>
-void AVLTree<K, V>::insert(Node*& subtree, const K& key, const V& value)
-{
+void AVLTree<K, V>::insert(Node*& node, const K& key, const V& value) {
     // your code here
-	 if (root == NULL) {
-		return new Node(key, value);
+	 if (node == NULL) {
+		node = new Node(key, value);
+		return;
 	}
-	if (key < root->key) {
-		root->left = insert(node->left, key, value);
+	if (key < node->key) {
+		insert(node->left, key, value);
 	} else if (key > root->key) {
-		node->right = insert(node->right, key, value);
+		insert(node->right, key, value);
 	} else {
-		return subtree;
+		node->value = value;
+		return;
 	}
 	
-	int balance = getHeightOrNeg1(subtree->right) - getHeightOrNeg1(subtree->left); 
-	rebalance(subtree);
+	node->height = std::max(heightOrNeg1(node->left), heightOrNeg1(node->right));
 }
 
-template <class K, class V>
-//Node AVLTree<K, V>::bstInsert(Node*& root, const K& key, const V& value) {
-	
-	return root;
-}
 
 template <class K, class V>
 void AVLTree<K, V>::remove(const K& key)
@@ -133,20 +131,45 @@ void AVLTree<K, V>::remove(Node*& subtree, const K& key)
         return;
 
     if (key < subtree->key) {
+		remove(subtree->left, key);
         // your code here
     } else if (key > subtree->key) {
         // your code here
+        remove(subtree->right, key);
     } else {
         if (subtree->left == NULL && subtree->right == NULL) {
-            /* no-child remove */
+            delete subtree;
+			subtree = NULL;
+			return;
+			/* no-child remove */
             // your code here
         } else if (subtree->left != NULL && subtree->right != NULL) {
+			Node* toRemove = subtree->left;
+			while (toRemove->right != NULL) {
+				// IOP
+				toRemove = toRemove->right;
+			}
+			subtree->key = toRemove->key;
+			subtree->value = toRemove->value;
+			remove(subtree->left, toRemove->key);
+			rebalance(subtree);
             /* two-child remove */
             // your code here
         } else {
+			Node* left = subtree->left;
+			Node* right = subtree->right;
+			delete subtree;
+			if (left != NULL) {
+				subtree = left;
+			} else {
+				subtree = right;
+				rebalance(subtree);
+			}
             /* one-child remove */
             // your code here
         }
+        subtree->height = std::max(heightOrNeg1(subtree->left), heightOrNeg1(subtree->right));
+		rebalance(subtree);
         // your code here
     }
 }

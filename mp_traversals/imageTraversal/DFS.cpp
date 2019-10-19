@@ -21,6 +21,8 @@ using std::vector;
  * @param tolerance If the current point is too different (difference larger than tolerance) with the start point,
  * it will not be included in this DFS
  */
+DFS::~DFS() {}
+
 DFS::DFS(const PNG & png, const Point & start, double tolerance) {  
   /** @todo [Part 1] */
 	png_ = png;
