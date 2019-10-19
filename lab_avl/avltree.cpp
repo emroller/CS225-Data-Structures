@@ -4,7 +4,7 @@
  * You'll need to modify this file.
  */
 #include <iostream>
-
+using std::max;
 template <class K, class V>
 V AVLTree<K, V>::find(const K& key) const
 {
@@ -35,7 +35,7 @@ void AVLTree<K, V>::rotateLeft(Node*& t)
 	Node* r = t->right;
 	t->right = r->left;
 	r->left = t;
-	t->height = 1 + std::max(heightOrNeg1(t->right), heightOrNeg1(t->left));
+	t->height = 1 + max(heightOrNeg1(t->right), heightOrNeg1(t->left));
 	t = r;
 }
 
@@ -58,7 +58,7 @@ void AVLTree<K, V>::rotateRight(Node*& t)
 	Node* l = t->left;
 	t->left = l->right;
 	l->right = t;
-	t->height = 1 + std::max(heightOrNeg1(t->right), heightOrNeg1(t->left));
+	t->height = 1 + max(heightOrNeg1(t->right), heightOrNeg1(t->left));
 	t = l;
 }
 
@@ -96,7 +96,7 @@ void AVLTree<K, V>::rebalance(Node*& subtree)
 			rotateRightLeft(subtree);
 		}
 	}
-	subtree->height = 1 + std::max(heightOrNeg1(subtree->left), heightOrNeg1(subtree->right));
+	subtree->height = 1 + max(heightOrNeg1(subtree->left), heightOrNeg1(subtree->right));
 	
 }
 
@@ -134,15 +134,16 @@ void AVLTree<K, V>::remove(const K& key)
 template <class K, class V>
 void AVLTree<K, V>::remove(Node*& subtree, const K& key)
 {
-    if (subtree == NULL)
+    if (subtree == NULL) {
         return;
+	}
 
-    if (key < subtree->key) {
-		remove(subtree->left, key);
+    if (key > subtree->key) {
+		remove(subtree->right, key);
         // your code here
-    } else if (key > subtree->key) {
+    } else if (key < subtree->key) {
         // your code here
-        remove(subtree->right, key);
+        remove(subtree->left, key);
     } else {
         if (subtree->left == NULL && subtree->right == NULL) {
             delete subtree;
@@ -163,20 +164,22 @@ void AVLTree<K, V>::remove(Node*& subtree, const K& key)
             /* two-child remove */
             // your code here
         } else {
-			Node* left = subtree->left;
-			Node* right = subtree->right;
-			delete subtree;
-			if (left != NULL) {
-				subtree = left;
-			} else {
-				subtree = right;
+			Node* l = subtree->left;
+			Node* r = subtree->right;
+			//delete subtree;
+			if (l != NULL) {
+				subtree = l;
+				std::cout<<"here!";
 				rebalance(subtree);
+			} else {
+				subtree = r;
+			//	rebalance(subtree);
 			}
             /* one-child remove */
             // your code here
         }
-        subtree->height = std::max(heightOrNeg1(subtree->left), heightOrNeg1(subtree->right));
+	}
+        subtree->height = max(heightOrNeg1(subtree->left), heightOrNeg1(subtree->right));
 		rebalance(subtree);
         // your code here
-    }
 }
