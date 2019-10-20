@@ -7,6 +7,7 @@
 #include "cs225/PNG.h"
 #include <list>
 #include <iostream>
+#include <vector>
 
 #include "colorPicker/ColorPicker.h"
 #include "imageTraversal/ImageTraversal.h"
@@ -28,6 +29,9 @@ public:
   Animation animate(unsigned frameInterval) const;
 
 private:
+	std::vector<ImageTraversal*> traversals_;
+	std::vector<ColorPicker*> colorPickers_;
+	PNG png_;
 	/** @todo [Part 2] */
 	/** add private members here*/
 

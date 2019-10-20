@@ -75,7 +75,6 @@ ImageTraversal::Iterator & ImageTraversal::Iterator::operator++() {
 		current_ = traversal_->pop();
 	}
 
-		std::cout<<"current: "<<current_<<std::endl;
 		int x = current_.x;
 		int y = current_.y;
 		int height = png_.height();
