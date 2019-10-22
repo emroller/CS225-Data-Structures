@@ -13,14 +13,12 @@ using namespace cs225;
 class MyColorPicker : public ColorPicker {
 public:
  	HSLAPixel getColor(unsigned x, unsigned y);
-//	MyColorPicker(PNG png_, HSLAPixel color1_, HSLAPixel color2_, HSLAPixel color3_);
-	MyColorPicker(double increment);
+	MyColorPicker( HSLAPixel color1_, HSLAPixel color2_, HSLAPixel color3_);
 
 private:
 	//PNG png;
-	//HSLAPixel color1;
-	//HSLAPixel color2;
-	//HSLAPixel color3;
+	HSLAPixel color1;
+	HSLAPixel color2;
+	HSLAPixel color3;
 	double hue;
-	double increment;
 };

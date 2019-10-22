@@ -59,15 +59,17 @@ Animation FloodFilledImage::animate(unsigned frameInterval) const {
     PNG frame = png_;
 	int interval = 1;
 
-	// for each traversal in our vector, 
+	// for each traversal in our vector
 	std::cout<<traversals_.size()<<std::endl;
 	for (unsigned i = 0; i < traversals_.size(); i++) {
 		animation.addFrame(frame);
-	
-    	for (Point point : *traversals_[i]) {		
-			HSLAPixel colorPix = colorPickers_[i]->getColor(point.x, point.y);;
-			frame.getPixel(point.x, point.y) = colorPix;
 
+		//for each point in the traversal	
+    	for (Point point : *traversals_[i]) {		
+			HSLAPixel colorPix = colorPickers_[i]->getColor(point.x, point.y);
+			frame.getPixel(point.x, point.y) =  colorPix;
+
+			//after every [frameinterval] frames, add frame
       		if (interval % frameInterval == 0) {
         		animation.addFrame(frame);
       		}
