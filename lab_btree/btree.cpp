@@ -147,6 +147,11 @@ void BTree<K, V>::split_child(BTreeNode* parent, size_t child_idx)
 
 
     /* TODO Your code goes here! */
+	parent->children.insert(child_itr, child);
+	parent->elements.insert(elem_itr, *mid_elem_itr);
+	new_right->children.assign(child_itr, mid_child_itr);
+	new_left->elements.assign(child->elements.begin(), mid_elem_itr);
+	new_left->children.assign(child->children.begin(), mid_child_itr);
 }
 
 /**
