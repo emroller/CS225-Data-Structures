@@ -39,9 +39,51 @@ bool KDTree<Dim>::shouldReplace(const Point<Dim>& target,
 template <int Dim>
 KDTree<Dim>::KDTree(const vector<Point<Dim>>& newPoints)
 {
-    /**
-     * @todo Implement this function!
-     */
+	if (newPoints.empty())
+		return;
+
+	vector<Point<Dim>> points = newPoints;
+	int median_pt = std::floor((points.size() - 1) / 2);
+	KDTreeNode median = findMedian(points, 0, points.size() - 1, median_pt, 0);
+
+// ------------------------------- old code ------------------------------------ //
+	// if newPoints has an even number of nodes, median is one before the middle
+	// if newPoints has an odd number of nodes, division by 2 will round down
+	//Point<Dim> median_pt; 
+
+	//if (points[points.size()/2 -1][0] == points[points.size()] {
+	//	median_pt = points[points.size()/2 - 1] < points[points.size()/2] ? points[points.size()/2 -1] : points[points.size()/2];
+	//} else {
+	//	median_pt =  points.size() % 2 == 0 ? points[points.size() / 2 - 1] : points[points.size() / 2]; 
+	//root = new KDTreeNode(median_pt);	
+}
+
+template <int Dim>
+int KDTree<Dim>::partition(vector<Point<Dim>> points, int L, int R, int dim) {
+	int x = points.at(R)[dim];
+	int i = L;
+	for (int j = L; j < R; j++) {
+		if (points.at(j)[dim] <= x)
+			std::swap(points.at(i), points.at(j));
+			i++;
+	}
+	std::swap(points.at(i), points.at(R));
+	return i;
+
+}
+
+template <int Dim>
+Point<Dim> KDTree<Dim>::findMedian(vector<Point<Dim>> points, int L, int R, int med_pt, int dim) {
+	int index = partition(points, L, R, dim);
+	
+	if (index - 1 == med_pt - 1)
+		return points.at(index);
+
+	if (index - 1 > med_pt - 1)
+		//recurse for left subarray
+		return findMedian(points, L, index - 1, med_pt, dim);
+
+	return findMedian(points, index + 1, R, med_pt - index + L - 1, dim);
 }
 
 template <int Dim>

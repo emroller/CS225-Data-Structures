@@ -43,6 +43,8 @@ class KDTree
     };
 
   public:
+	Point<Dim> findMedian(vector<Point<Dim>> points, int L, int R, int med_pt, int dim);
+	int partition(vector<Point<Dim>> points, int L, int R, int dim);
     /**
      * Determines if Point a is smaller than Point b in a given dimension d.
      * If there is a tie, break it with Point::operator<().
