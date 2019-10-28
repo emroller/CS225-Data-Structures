@@ -8,6 +8,7 @@
 #include <unordered_map>
 #include <numeric>
 #include <vector>
+#include <iostream>
 
 const static std::vector<size_t> sizes = {
     10,

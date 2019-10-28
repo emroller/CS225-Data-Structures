@@ -1,4 +1,8 @@
+#include <iostream>
+using std::cout;
+using std::endl;
 /**
+ *
  * @file btree.cpp
  * Implementation of a B-tree class which can be used as a generic dictionary
  * (insert-only). Designed to take advantage of caching to be faster than
@@ -29,7 +33,7 @@ V BTree<K, V>::find(const BTreeNode* subroot, const K& key) const
 
     size_t first_larger_idx = insertion_idx(subroot->elements, key);
 
-	if (first_larger_idx <= order-1 && key == subroot->elements[first_larger_idx]) {
+	if (first_larger_idx <= order-1 && !subroot->elements.empty() && first_larger_idx<subroot->elements.size() && key == subroot->elements[first_larger_idx].key) {
 		return subroot->elements[first_larger_idx].value;
 	}		 
     /* If first_larger_idx is a valid index and the key there is the key we
@@ -147,11 +151,14 @@ void BTree<K, V>::split_child(BTreeNode* parent, size_t child_idx)
 
 
     /* TODO Your code goes here! */
-	parent->children.insert(child_itr, child);
+	parent->children.insert(child_itr, new_right);//child);
 	parent->elements.insert(elem_itr, *mid_elem_itr);
-	new_right->children.assign(child_itr, mid_child_itr);
-	new_left->elements.assign(child->elements.begin(), mid_elem_itr);
-	new_left->children.assign(child->children.begin(), mid_child_itr);
+
+    new_right->children.assign(mid_child_itr, new_left->children.end());
+	new_right->elements.assign(mid_elem_itr + 1, new_left->elements.end());
+
+    new_left->children.assign(child->children.begin(), mid_child_itr);
+    new_left->elements.assign(child->elements.begin(), mid_elem_itr);
 }
 
 /**
@@ -174,6 +181,19 @@ void BTree<K, V>::insert(BTreeNode* subroot, const DataPair& pair)
      */
 
     size_t first_larger_idx = insertion_idx(subroot->elements, pair);
-
-    /* TODO Your code goes here! */
+	if (first_larger_idx <= order-1 && !subroot->elements.empty() && subroot->elements.size() > first_larger_idx) {
+		if (pair.key == subroot->elements[first_larger_idx].key) {
+			return;
+		}
+	}
+	
+	if (subroot->is_leaf) {
+		subroot->elements.insert(subroot->elements.begin() + first_larger_idx, pair);
+	} else {
+	BTreeNode* child = subroot->children[first_larger_idx];
+	insert(child, pair);
+		if (child->elements.size() >= order) {
+			split_child(subroot, first_larger_idx);
+		}
+	}	
 }
