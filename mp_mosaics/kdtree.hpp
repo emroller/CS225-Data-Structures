@@ -12,9 +12,6 @@ template <int Dim>
 bool KDTree<Dim>::smallerDimVal(const Point<Dim>& first,
                                 const Point<Dim>& second, int curDim) const
 {
-    /**
-     * @todo Implement this function!
-     */
 	if (first[curDim] == second[curDim])
 		return first < second;
 	return first[curDim] < second[curDim]; 
@@ -25,11 +22,18 @@ bool KDTree<Dim>::shouldReplace(const Point<Dim>& target,
                                 const Point<Dim>& currentBest,
                                 const Point<Dim>& potential) const
 {
-    /**
-     * @todo Implement this function!
-     */
+ 
+	// don't need to invoke sqrt; just compare squared distances
+	int potDist = 0;
+	int bestDist = 0;
+	for (int i = 0; i < Dim; i++) {
+		potDist += (target[i] - potential[i]) * (target[i] - potential[i]);
+		bestDist += (target[i] - currentBest[i]) * (target[i] - currentBest[i]);
+	}
+	if (potDist == bestDist)
+		return potential < currentBest;
 
-     return false;
+     return potDist < bestDist;
 }
 
 template <int Dim>
