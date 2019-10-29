@@ -46,6 +46,7 @@ class KDTree
 	KDTreeNode* makeNodes(KDTreeNode*& subroot, vector<Point<Dim>> points, int dimension);
 	Point<Dim> findMedian(vector<Point<Dim>> points, int L, int R, int med_pt, int dim);
 	int partition(vector<Point<Dim>> points, int L, int R, int dim);
+	void deleteTree(KDTreeNode* node);
     /**
      * Determines if Point a is smaller than Point b in a given dimension d.
      * If there is a tie, break it with Point::operator<().
@@ -258,6 +259,8 @@ class KDTree
     /** Helper function for grading */
     void printTree(KDTreeNode * subroot, std::vector<std::string>& output,
                    int left, int top, int width, int currd) const;
+
+	Point<Dim> findNearestNeighbor(KDTreeNode* subroot, const Point<Dim>& query, int dimension) const;
 
 	/** helper function for recursively constructing tree */
 	//KDTreeNode makeNodes(KDTreeNode *& subroot, vector<Point<Dim>> points, int dimension);
