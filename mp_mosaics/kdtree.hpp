@@ -178,41 +178,32 @@ Point<Dim> KDTree<Dim>::findNearestNeighbor(const Point<Dim>& query) const
 template <int Dim>
 Point<Dim> KDTree<Dim>::findNearestNeighbor(KDTreeNode* subroot, const Point<Dim>& query, int dimension) const {
 
-
 	if (subroot == NULL)
 		return query;	//why? i dunno but it passes tests
+	if (subroot->point == query)
+		return subroot->point;
 
-	Point<Dim> best = subroot->point;
-	if (best == query)
-		return best;
+	int newDim = 1;
+	if (Dim != 1)
+		newDim = (dimension + 1) % (Dim) + 1;
 
-	/* TO FIND NEW DIMENSION:
- 	* Dim = 3 (x, y , z)
-	* dimension = 1: newDim = 2
-	* dimension = 2: newDim = 3 
-	* dimension = 3: newDim = 1
-	*/
-
-	int newDim = dimension == Dim ? 1 : (dimension + 1) % (Dim + 1);
-
-	/* if the left subtree is NULL, don't traverse it */
-	if (subroot->left == NULL) {
-		best = findNearestNeighbor(subroot->right, query, newDim);
-	/* if the right subtree is NULL, don't traverse it */
-	} else if (subroot->right == NULL) {
-		best = findNearestNeighbor(subroot->left, query, newDim);
-	/* if both children are there, check both */
-	} else {
-		if (subroot->left->point[dimension] == subroot->right->point[dimension]) {
-			KDTreeNode* bestnode = subroot->left < subroot->right ? subroot->left : subroot->right;
-			best = findNearestNeighbor(bestnode, query, newDim);
-		} else if (smallerDimVal(subroot->left->point, subroot->right->point, dimension)) {
-			best = findNearestNeighbor(subroot->left, query, newDim);
-		}  else {
-			best = findNearestNeighbor(subroot->right, query, newDim);
-		}
+	if (subroot->left == NULL)
+		return findNearestNeighbor(subroot->right, query, newDim);
+	else if (subroot->right == NULL)
+		return findNearestNeighbor(subroot->left, query, newDim);
+	else {
+		int leftDist = abs(subroot->left->point[dimension-1] - query[dimension-1]);
+		int rightDist = abs(subroot->right->point[dimension-1] - query[dimension-1]);
+		if (leftDist == rightDist) {
+			if (subroot->left->point < subroot->right->point)
+				return findNearestNeighbor(subroot->left, query, newDim);
+			else
+				return findNearestNeighbor(subroot->right, query, newDim);
+			//return subroot->left->point < query ? findNearestNeighbor(subroot->left, query, newDim) : findNearestNeighbor(subroot->right, query, newDim);	
+		} else if (leftDist < rightDist)
+			return findNearestNeighbor(subroot->left, query, newDim);
+		else
+			return findNearestNeighbor(subroot->right, query, newDim);
 	}
-	return best;
-	
 }
 
