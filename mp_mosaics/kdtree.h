@@ -43,6 +43,7 @@ class KDTree
     };
 
   public:
+	KDTreeNode* makeNodes(KDTreeNode*& subroot, vector<Point<Dim>> points, int dimension);
 	Point<Dim> findMedian(vector<Point<Dim>> points, int L, int R, int med_pt, int dim);
 	int partition(vector<Point<Dim>> points, int L, int R, int dim);
     /**
@@ -257,6 +258,9 @@ class KDTree
     /** Helper function for grading */
     void printTree(KDTreeNode * subroot, std::vector<std::string>& output,
                    int left, int top, int width, int currd) const;
+
+	/** helper function for recursively constructing tree */
+	//KDTreeNode makeNodes(KDTreeNode *& subroot, vector<Point<Dim>> points, int dimension);
 
     /**
      * @todo Add your helper functions here.
