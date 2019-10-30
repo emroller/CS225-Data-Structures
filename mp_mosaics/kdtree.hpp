@@ -66,7 +66,7 @@ template <int Dim>
 typename KDTree<Dim>::KDTreeNode* KDTree<Dim>::makeNodes(KDTreeNode *& subroot, vector<Point<Dim>> points, int dimension) {
 
 	if (points.size() == 0) {return NULL;}
-	if (points.size() == 1) { return new KDTreeNode(points[dimension-1]); }
+	if (points.size() == 1) { return new KDTreeNode(points[0]); }
 
 	int median_pt = std::floor((points.size() - 1) / 2);
 	Point<Dim> median = findMedian(points, 0, points.size() - 1, median_pt, 0); //0
@@ -99,10 +99,10 @@ typename KDTree<Dim>::KDTreeNode* KDTree<Dim>::makeNodes(KDTreeNode *& subroot, 
 
 template <int Dim>
 int KDTree<Dim>::partition(vector<Point<Dim>> points, int L, int R, int dim) {
-	int x = points[R][dim-1];
+	Point<Dim> x = points[R];
 	int i = L;
 	for (int j = L; j < R; j++) {
-		if (smallerDimVal(points[i], points[x], dim))
+		if (smallerDimVal(points[j], x, dim))
 			std::swap(points[i], points[j]);
 			i++;
 	//	if (points[j][dim] <= x)
@@ -177,7 +177,7 @@ Point<Dim> KDTree<Dim>::findNearestNeighbor(const Point<Dim>& query) const
 
 template <int Dim>
 Point<Dim> KDTree<Dim>::findNearestNeighbor(KDTreeNode* subroot, const Point<Dim>& query, int dimension) const {
-
+	
 	if (subroot == NULL)
 		return query;	//why? i dunno but it passes tests
 	if (subroot->point == query)
@@ -205,5 +205,5 @@ Point<Dim> KDTree<Dim>::findNearestNeighbor(KDTreeNode* subroot, const Point<Dim
 		else
 			return findNearestNeighbor(subroot->right, query, newDim);
 	}
-}
 
+}
