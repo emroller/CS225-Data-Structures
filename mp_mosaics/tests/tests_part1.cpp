@@ -178,7 +178,6 @@ TEST_CASE("KDTree::findNearestNeighbor (2D), returns correct result", "[weight=1
       points.push_back(Point<2>(coords[i]));
   Point<2> target(targetCoords);
   Point<2> expected(expectedCoords);
-
   KDTree<2> tree(points);
   int size = 2;
   int K = 2;
@@ -250,6 +249,7 @@ TEST_CASE("KDTree::findNearestNeighbor (2D), testing correct path", "[weight=1][
     Point<2> target(targetCoords);
     Point<2> expected(expectedCoords);
 
+	
     KDTree<2> tree(points);
 
     int size = 10;

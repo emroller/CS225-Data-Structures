@@ -43,9 +43,9 @@ class KDTree
     };
 
   public:
-	KDTreeNode* makeNodes(KDTreeNode*& subroot, vector<Point<Dim>> points, int dimension);
-	Point<Dim> findMedian(vector<Point<Dim>> points, int L, int R, int med_pt, int dim);
-	int partition(vector<Point<Dim>> points, int L, int R, int dim);
+	KDTreeNode* makeNodes(KDTreeNode*& subroot, vector<Point<Dim>> &points, int dimension, int left, int right);
+	Point<Dim> findMedian(vector<Point<Dim>> &points, int L, int R, int med_pt, int dim);
+	int partition(vector<Point<Dim>>& points, int L, int R,int dim);
 	void deleteTree(KDTreeNode* node);
     /**
      * Determines if Point a is smaller than Point b in a given dimension d.
@@ -260,7 +260,8 @@ class KDTree
     void printTree(KDTreeNode * subroot, std::vector<std::string>& output,
                    int left, int top, int width, int currd) const;
 
-	Point<Dim> findNearestNeighbor(KDTreeNode* subroot, const Point<Dim>& query, int dimension) const;
+	Point<Dim> findNearestNeighbor(KDTreeNode* subroot, const Point<Dim>& query, Point<Dim>& best, int bestDist) const;
+	int euclidDist(const Point<Dim>& first, const Point<Dim>& second) const;
 
 	/** helper function for recursively constructing tree */
 	//KDTreeNode makeNodes(KDTreeNode *& subroot, vector<Point<Dim>> points, int dimension);

@@ -48,84 +48,71 @@ KDTree<Dim>::KDTree(const vector<Point<Dim>>& newPoints)
 	// finds the median node and sets it as the root node
 	
 	// then recursively makes the rest of the tree
-	makeNodes(root, points, 1);
-
+	root = makeNodes(root, points, 0, 0, points.size()-1);
 }
-
-//template <int Dim>
-//KDTreeNode KDTree<Dim>::makeNodes(vector<Point<Dim>> points) {
-//	int median_pt = std::floor((points.size() - 1) / 2);
-//	Point<Dim> median = findMedian(points, 0, points.size() - 1, median_pt, 0);
-//	root = new KDTreeNode(median);
-//	
-//	root->left = makeNode(
-//}
 
 /** helper function for recursively constructing tree */
 template <int Dim>
-typename KDTree<Dim>::KDTreeNode* KDTree<Dim>::makeNodes(KDTreeNode *& subroot, vector<Point<Dim>> points, int dimension) {
+typename KDTree<Dim>::KDTreeNode* KDTree<Dim>::makeNodes(KDTreeNode *& subroot, vector<Point<Dim>>& points, int dimension, int left, int right) {
+	if (points.empty() || right < left)
+		return NULL;
 
-	if (points.size() == 0) {return NULL;}
-	if (points.size() == 1) { return new KDTreeNode(points[0]); }
+	// if points.size = 6; median should be the third smalles
+	// if points.size = 5, median should be the second smallest
+	int median_pt = (left + right) / 2;
 
-	int median_pt = std::floor((points.size() - 1) / 2);
-	Point<Dim> median = findMedian(points, 0, points.size() - 1, median_pt, 0); //0
+	//find the median point
+	Point<Dim> median = findMedian(points, left, right, median_pt, dimension);
+	//use it to make the subroot node
 	subroot = new KDTreeNode(median);
 
-	int newDim;	
+	//increment the dimension, or wrap back around
+	int newDim = (dimension + 1) % Dim;
+	//make the subroot's children nodes
+	makeNodes(subroot->left, points, newDim, left, median_pt-1);
+	makeNodes(subroot->right, points, newDim, median_pt+1, right);
 
-	if (Dim == 1)
-		newDim = 1;
-	else
-		newDim = (dimension + 1) % (Dim + 1);
-
-	vector<Point<Dim>> left_v;
-	for (Point<Dim> p : points) {
-		if (p != median)
-			left_v.push_back(p);
-		else
-			break;
-	}
-	subroot->left = makeNodes(subroot->left, left_v, newDim);
-
-	vector<Point<Dim>> right_v;
-	for (unsigned i = left_v.size() + 1; i < points.size(); i++) {
-		right_v.push_back(points[i]);
-	}
-	
-	subroot->right = makeNodes(subroot->right, right_v, newDim);
 	return subroot;
+
 }
 
+/*
+ * sorts the points vector so that everything with a smaller value than the last element at the given dimension is to its left; everything else is to its right
+ */
 template <int Dim>
-int KDTree<Dim>::partition(vector<Point<Dim>> points, int L, int R, int dim) {
+int KDTree<Dim>::partition(vector<Point<Dim>>& points, int L, int R, int dim) {
 	Point<Dim> x = points[R];
 	int i = L;
-	for (int j = L; j < R; j++) {
-		if (smallerDimVal(points[j], x, dim))
-			std::swap(points[i], points[j]);
-			i++;
-	//	if (points[j][dim] <= x)
-	//		i++;
-	}
-	std::swap(points[i], points[R]);
-	return i;
+  	for(int j = L; j < R; j++){
+    	if(smallerDimVal(points[j], x, dim)){
+      		std::swap(points[i], points[j]);
+      		i++;
+    	}
+  	}
+  std::swap(points[R], points[i]);
+  return i;
 
 }
 
 template <int Dim>
-Point<Dim> KDTree<Dim>::findMedian(vector<Point<Dim>> points, int L, int R, int med_pt, int dim) {
-	int index = partition(points, L, R, dim);
+Point<Dim> KDTree<Dim>::findMedian(vector<Point<Dim>>& points, int L, int R, int med_pt, int dim) {
+	// base cases
+	if (points.size() == 0) return NULL;
+	if (points.size() == 1) return points[L];
 	
-	if (index - 1 == med_pt - 1)
-		return points[index];
+	// find the current index of where the last element was moved to
+	int index = partition(points, L, R, dim);
 
-	if (index - 1 > med_pt - 1)
+	// if we're at the median index, return that point
+	if (index == med_pt)
+		return points[med_pt];
+
+	if (index > med_pt)
 		//recurse for left subarray
 		return findMedian(points, L, index - 1, med_pt, dim);
 
 	// or recurse for right subarray
-	return findMedian(points, index + 1, R, med_pt - index + L - 1, dim);
+	return findMedian(points, index + 1, R, med_pt, dim);
 }
 
 template <int Dim>
@@ -167,17 +154,82 @@ void KDTree<Dim>::deleteTree(KDTreeNode* node) {
 template <int Dim>
 Point<Dim> KDTree<Dim>::findNearestNeighbor(const Point<Dim>& query) const
 {
-    /**
+	/*
      * 1) starting at root, determine euclidean distance between left and right, based on 1st dimension (x)
      * 2) go to the child with the smaller distance
      * 3) use that node as the root and increment dimension (mod if necessary)
-     */
-    return findNearestNeighbor(root, query, 1);
+    */
+ 
+	Point<Dim> best = root->point;
+	double distBest = euclidDist(query, best);
+    return findNearestNeighbor(root, query, best, distBest);
+
 }
 
 template <int Dim>
-Point<Dim> KDTree<Dim>::findNearestNeighbor(KDTreeNode* subroot, const Point<Dim>& query, int dimension) const {
-	
+Point<Dim> KDTree<Dim>::findNearestNeighbor(KDTreeNode* subroot, const Point<Dim>& query, Point<Dim>& best, int bestDist)  const {
+
+	// if the query point is in the tree, and that's where we are, return it
+	if (subroot->point == query)
+		return subroot->point;
+
+	if (subroot->left == NULL && subroot->right == NULL)
+		return best;
+
+	// if the left child is null, we want to recurse down the right child only
+	if (subroot->left == NULL)
+		best = findNearestNeighbor(subroot->right, query, best, bestDist);
+	// if the right child is null, we want to recurse down the left child only
+	else if (subroot->right == NULL)
+		best = findNearestNeighbor(subroot->left, query, best, bestDist);
+	else {
+		// find the distances from query for the left and right children
+		double distL = euclidDist(query, subroot->left->point);
+		double distR = euclidDist(query, subroot->right->point);
+
+	// if either of those are closer than the current best distances, update the best point and distance
+		if (distL < bestDist) {
+			best = subroot->left->point;
+			bestDist = distL;
+		} else if (distR < bestDist) {
+			best = subroot->right->point;
+			bestDist = distR;
+		}
+
+	// now we have to continue traversing down the tree
+	// if the distances are equal, traverse based on the < point operator
+		if (distL == distR) {
+			best = subroot->left->point < subroot->right->point ? findNearestNeighbor(subroot->left, query, best, bestDist): findNearestNeighbor(subroot->right, query, best, bestDist); 
+	// otherwise, traverse to the child that has the smaller distance
+		} else if (distL < distR) {
+			best = findNearestNeighbor(subroot->left, query, best, bestDist);
+		} else { // distR < distL
+			best = findNearestNeighbor(subroot->right, query, best, bestDist);
+		}
+	}
+
+	//first check if the distance to the parent node is less than the current radius
+	if (shouldReplace(query, best, subroot->point))
+		bestDist = euclidDist(query, subroot->point);
+		best = subroot->point;
+
+	// check to see if the current splitting plane's distance from search node is within the current radius 
+	return best;
+
+}
+
+template <int Dim>
+int KDTree<Dim>::euclidDist(const Point<Dim>& first, const Point<Dim>& second) const {
+	if (first == second) return 0;
+
+	int dist = 0;
+	for (int i = 1; i <= Dim; i++) {
+		dist += (first[i-1] - second[i-1]) * (first[i-1] - second[i-1]);
+	}
+	return sqrt(dist);
+}
+
+/*
 	if (subroot == NULL)
 		return query;	//why? i dunno but it passes tests
 	if (subroot->point == query)
@@ -207,3 +259,4 @@ Point<Dim> KDTree<Dim>::findNearestNeighbor(KDTreeNode* subroot, const Point<Dim
 	}
 
 }
+*/
