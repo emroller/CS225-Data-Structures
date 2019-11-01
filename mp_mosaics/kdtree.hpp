@@ -54,8 +54,9 @@ KDTree<Dim>::KDTree(const vector<Point<Dim>>& newPoints)
 /** helper function for recursively constructing tree */
 template <int Dim>
 typename KDTree<Dim>::KDTreeNode* KDTree<Dim>::makeNodes(KDTreeNode *& subroot, vector<Point<Dim>>& points, int dimension, int left, int right) {
-	if (points.empty() || right < left)
-		return NULL;
+
+	if (points.empty() || right < left) return NULL;
+	if (points.size() == 1) return new KDTreeNode(points[0]);
 
 	// if points.size = 6; median should be the third smalles
 	// if points.size = 5, median should be the second smallest
@@ -161,61 +162,56 @@ Point<Dim> KDTree<Dim>::findNearestNeighbor(const Point<Dim>& query) const
     */
  
 	Point<Dim> best = root->point;
-	double distBest = euclidDist(query, best);
-    return findNearestNeighbor(root, query, best, distBest);
+    return findNearestNeighbor( query, root, best, 0);
 
 }
 
+// const Point<Dim> &target, KDTreeNode* subroot, Point<Dim> &bestPoint, int dimension
 template <int Dim>
-Point<Dim> KDTree<Dim>::findNearestNeighbor(KDTreeNode* subroot, const Point<Dim>& query, Point<Dim>& best, int bestDist)  const {
+Point<Dim> KDTree<Dim>::findNearestNeighbor(const Point<Dim> query, KDTreeNode* subroot, Point<Dim>& best, int dimension)  const {
+	Point<Dim>& bestestPoint = best;
 
-	// if the query point is in the tree, and that's where we are, return it
-	if (subroot->point == query)
-		return subroot->point;
+	if (subroot == NULL)
+		return bestestPoint;
 
-	if (subroot->left == NULL && subroot->right == NULL)
-		return best;
+	if (subroot->right == NULL && subroot->left == NULL) {
+		if (shouldReplace(query, bestestPoint, subroot->point)) {
+			bestestPoint = subroot->point;
+		}
+		return bestestPoint;
+	}
 
-	// if the left child is null, we want to recurse down the right child only
-	if (subroot->left == NULL)
-		best = findNearestNeighbor(subroot->right, query, best, bestDist);
-	// if the right child is null, we want to recurse down the left child only
-	else if (subroot->right == NULL)
-		best = findNearestNeighbor(subroot->left, query, best, bestDist);
-	else {
-		// find the distances from query for the left and right children
-		double distL = euclidDist(query, subroot->left->point);
-		double distR = euclidDist(query, subroot->right->point);
+	Point<Dim> t = query;
+	t[dimension] = subroot->point[dimension];
 
-	// if either of those are closer than the current best distances, update the best point and distance
-		if (distL < bestDist) {
-			best = subroot->left->point;
-			bestDist = distL;
-		} else if (distR < bestDist) {
-			best = subroot->right->point;
-			bestDist = distR;
+	if (subroot->left != NULL) {
+		if (smallerDimVal(query, subroot->point, dimension)) {
+			findNearestNeighbor(query, subroot->left, bestestPoint, (dimension+1) % Dim);
+		if (shouldReplace(query, bestestPoint, t)) {
+			findNearestNeighbor(query, subroot->right, bestestPoint, (dimension+1) % Dim);
 		}
 
-	// now we have to continue traversing down the tree
-	// if the distances are equal, traverse based on the < point operator
-		if (distL == distR) {
-			best = subroot->left->point < subroot->right->point ? findNearestNeighbor(subroot->left, query, best, bestDist): findNearestNeighbor(subroot->right, query, best, bestDist); 
-	// otherwise, traverse to the child that has the smaller distance
-		} else if (distL < distR) {
-			best = findNearestNeighbor(subroot->left, query, best, bestDist);
-		} else { // distR < distL
-			best = findNearestNeighbor(subroot->right, query, best, bestDist);
+		if (shouldReplace(query, bestestPoint, subroot->point)) {
+			bestestPoint = subroot->point;
+		}
+	
+		return bestestPoint;
 		}
 	}
 
-	//first check if the distance to the parent node is less than the current radius
-	if (shouldReplace(query, best, subroot->point))
-		bestDist = euclidDist(query, subroot->point);
-		best = subroot->point;
+	//right subtree
+	if (subroot->right != NULL) {
+		findNearestNeighbor(query, subroot->right, bestestPoint, (dimension+1) % Dim);
 
-	// check to see if the current splitting plane's distance from search node is within the current radius 
-	return best;
+		if (shouldReplace(query, bestestPoint, t)) {
+			findNearestNeighbor(query, subroot->left, bestestPoint, (dimension+1)%Dim);
+		}
 
+		if (shouldReplace(query, bestestPoint, subroot->point)) {
+			bestestPoint = subroot->point;
+		}
+	}
+	return bestestPoint;
 }
 
 template <int Dim>

@@ -260,7 +260,7 @@ class KDTree
     void printTree(KDTreeNode * subroot, std::vector<std::string>& output,
                    int left, int top, int width, int currd) const;
 
-	Point<Dim> findNearestNeighbor(KDTreeNode* subroot, const Point<Dim>& query, Point<Dim>& best, int bestDist) const;
+	Point<Dim> findNearestNeighbor(const Point<Dim> query, KDTreeNode* subroot, Point<Dim>& best, int dimension) const;
 	int euclidDist(const Point<Dim>& first, const Point<Dim>& second) const;
 
 	/** helper function for recursively constructing tree */
