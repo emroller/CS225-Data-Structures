@@ -4,6 +4,13 @@
  */
 
 #include "schashtable.h"
+#include <iostream>
+using std::cout;
+using std::endl;
+using hashes::hash;
+using std::list;
+using std::pair;
+
 
 template <class K, class V>
 SCHashTable<K, V>::SCHashTable(size_t tsize)
@@ -49,34 +56,47 @@ SCHashTable<K, V>::SCHashTable(SCHashTable<K, V> const& other)
 template <class K, class V>
 void SCHashTable<K, V>::insert(K const& key, V const& value)
 {
+	unsigned int newHash = hash(key, size);
+	std::pair<K, V> p(key, value);
+	table[newHash].push_front(p);
+	
+	// increment the size of the table
+	elems++;
+	if (shouldResize())
+		resizeTable();	
 
-    /**
-     * @todo Implement this function.
-     *
-     */
+
 }
 
 template <class K, class V>
 void SCHashTable<K, V>::remove(K const& key)
 {
     typename std::list<std::pair<K, V>>::iterator it;
-    /**
-     * @todo Implement this function.
-     *
-     * Please read the note in the lab spec about list iterators and the
-     * erase() function on std::list!
-     */
-    (void) key; // prevent warnings... When you implement this function, remove this line.
+	unsigned int current = hash(key, size);
+
+    if (table[current].empty())
+		return;
+
+	for (it = table[current].begin(); it != table[current].end(); it++) {
+        if (key == it->first) {
+            table[current].erase(it);
+            elems--;
+            break;
+        }
+    }
 }
 
 template <class K, class V>
 V SCHashTable<K, V>::find(K const& key) const
 {
 
-    /**
-     * @todo: Implement this function.
-     */
-
+	unsigned int current= hash(key, size);
+	
+    typename list<pair<K, V>>::iterator it;
+	for (it = table[current].begin(); it != table[current].end(); it++) {
+        if (it->first == key)
+			return it->second;
+    }
     return V();
 }
 
@@ -134,4 +154,19 @@ void SCHashTable<K, V>::resizeTable()
      *
      * @hint Use findPrime()!
      */
+
+	// load factor = number of keys / capacit
+	unsigned int tableSize = findPrime(size*2);	
+	std::list<std::pair<K, V>>* newlist = new std::list<std::pair<K,V>>[tableSize];
+
+	for (unsigned int i = 0 ; i < size; i++){
+	for (it = table[i].begin(); it != table[i].end(); it++) {
+		unsigned current = hash(it->first, tableSize);
+		newlist[current].push_front(std::pair<K, V>(it->first, it->second));			
+	}
+	}
+	size = tableSize;
+	delete[] table;
+	table = newlist;
+			
 }

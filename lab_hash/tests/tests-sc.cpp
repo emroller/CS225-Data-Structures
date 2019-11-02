@@ -141,6 +141,7 @@ TEST_CASE("SC::testInsertHard", "[valgrind][weight=10]")
 	if( !hashTable.keyExists("far") )
 		FAIL("Did not insert properly key: 'far'");
 	if( hashTable.find("want") != 13 )
+		std::cout<<hashTable.find("want");
 		FAIL("Did not insert key-value pair properly");
 
     REQUIRE(true);
