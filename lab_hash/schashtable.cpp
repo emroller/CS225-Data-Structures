@@ -165,8 +165,8 @@ void SCHashTable<K, V>::resizeTable()
 			newlist[current].push_front(std::pair<K, V>(it->first, it->second));			
 		}
 	}
-	size = tableSize;
 	delete[] table;
+	size = tableSize;
 	table = newlist;
 			
 }
