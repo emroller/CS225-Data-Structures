@@ -160,10 +160,10 @@ void SCHashTable<K, V>::resizeTable()
 	std::list<std::pair<K, V>>* newlist = new std::list<std::pair<K,V>>[tableSize];
 
 	for (unsigned int i = 0 ; i < size; i++){
-	for (it = table[i].begin(); it != table[i].end(); it++) {
-		unsigned current = hash(it->first, tableSize);
-		newlist[current].push_front(std::pair<K, V>(it->first, it->second));			
-	}
+		for (it = table[i].begin(); it != table[i].end(); it++) {
+			unsigned current = hash(it->first, tableSize);
+			newlist[current].push_front(std::pair<K, V>(it->first, it->second));			
+		}
 	}
 	size = tableSize;
 	delete[] table;

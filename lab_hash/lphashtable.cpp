@@ -3,6 +3,13 @@
  * Implementation of the LPHashTable class.
  */
 #include "lphashtable.h"
+#include <iostream>
+using std::cout;
+using std::endl;
+using hashes::hash;
+using std::pair;
+
+
 
 template <class K, class V>
 LPHashTable<K, V>::LPHashTable(size_t tsize)
@@ -71,38 +78,47 @@ LPHashTable<K, V>::LPHashTable(LPHashTable<K, V> const& other)
 template <class K, class V>
 void LPHashTable<K, V>::insert(K const& key, V const& value)
 {
+	elems++;
+    if (shouldResize())
+         resizeTable();
 
-    /**
-     * @todo Implement this function.
-     *
-     * @note Remember to resize the table when necessary (load factor >= 0.7).
-     * **Do this check *after* increasing elems (but before inserting)!!**
-     * Also, don't forget to mark the cell for probing with should_probe!
-     */
+	unsigned int current = hash(key, size);
 
-    (void) key;   // prevent warnings... When you implement this function, remove this line.
-    (void) value; // prevent warnings... When you implement this function, remove this line.
+	while (table[current] != NULL) {
+        current = (current + 1) % size;
+    }
+
+    should_probe[current] = true;
+    table[current] = new pair<K, V>(key, value);
+
 }
 
 template <class K, class V>
 void LPHashTable<K, V>::remove(K const& key)
 {
-    /**
-     * @todo: implement this function
-     */
+	int index = findIndex(key);
+	
+	if (index == -1)
+		return;
+
+	delete table[index];
+	table[index] = NULL;
+	elems--;
 }
 
 template <class K, class V>
 int LPHashTable<K, V>::findIndex(const K& key) const
 {
+	unsigned int current = hash(key, size);
 
-    /**
-     * @todo Implement this function
-     *
-     * Be careful in determining when the key is not in the table!
-     */
+	while (should_probe[current]) {
+		if (table[current] != NULL && table[current]->first == key)
+			return current;
 
-    return -1;
+		current = (current + 1) % size;
+	}
+
+	return -1;	// if not found
 }
 
 template <class K, class V>
@@ -151,12 +167,28 @@ void LPHashTable<K, V>::clear()
 template <class K, class V>
 void LPHashTable<K, V>::resizeTable()
 {
+	unsigned int newSize = findPrime(size*2);
+	pair<K, V>** newTable= new pair<K, V>*[newSize];
+	delete[] should_probe;
+	should_probe = new bool[newSize];
 
-    /**
-     * @todo Implement this function
-     *
-     * The size of the table should be the closest prime to size * 2.
-     *
-     * @hint Use findPrime()!
-     */
+	for (unsigned i = 0; i < newSize; i++) {
+		newTable[i] = NULL;
+		should_probe[i] = false;
+	}
+
+	for (unsigned int i = 0; i < size; i++) {
+		if (table[i] != NULL) {
+			unsigned int current = hash(table[i]->first, newSize);
+            while (newTable[current] != NULL) {
+                current = (current + 1) % newSize;
+            }
+			newTable[current] = table[i];
+			should_probe[current] = true;
+		}
+	}
+	delete[] table;
+	table = newTable;
+	size = newSize;
+
 }
