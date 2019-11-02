@@ -4,6 +4,8 @@
  */
 
 #include "dhhashtable.h"
+using hashes::hash;
+using hashes::secondary_hash;
 
 template <class K, class V>
 DHHashTable<K, V>::DHHashTable(size_t tsize)
@@ -73,32 +75,54 @@ template <class K, class V>
 void DHHashTable<K, V>::insert(K const& key, V const& value)
 {
 
-    /**
-     * @todo Implement this function.
-     *
-     * @note Remember to resize the table when necessary (load factor >=
-     *  0.7). **Do this check *after* increasing elems!!** Also, don't
-     *  forget to mark the cell for probing with should_probe!
-     */
+	elems++;
+	if (shouldResize())
+		resizeTable();
+	/** 
+ 	* if slot hash(x) % size is full, try slot (hash(x) + hash2(x)) % size
+ 	* if that slot is full, try again
+ 	* and so on
+ 	*/
 
-    (void) key;   // prevent warnings... When you implement this function, remove this line.
-    (void) value; // prevent warnings... When you implement this function, remove this line.
+	unsigned int hash1 = hash(key, size);
+	unsigned int hash2 = secondary_hash(key, size);
+
+ 	while (table[hash1] != NULL) {		// try to find an empty slot
+		hash1 = (hash1 + hash2) % size;
+	}
+
+	std::pair<K, V>* p = new std::pair<K, V>(key, value);
+	table[hash1] = p;
+	should_probe[hash1] = true;
+
 }
 
 template <class K, class V>
 void DHHashTable<K, V>::remove(K const& key)
 {
-    /**
-     * @todo Implement this function
-     */
+	int index = findIndex(key);
+	
+	if (index == -1)
+		return;
+
+	delete table[index];
+	table[index] = NULL;
+	elems--;
 }
 
 template <class K, class V>
 int DHHashTable<K, V>::findIndex(const K& key) const
 {
-    /**
-     * @todo Implement this function
-     */
+	
+	unsigned int hash1 = hash(key, size);
+	unsigned int hash2 = secondary_hash(key, size);
+
+	while (should_probe[hash1]) {
+		if (table[hash1] != NULL && table[hash1]->first == key)
+			return hash1;
+
+		hash1 = (hash1 + hash2) % size;
+	}
     return -1;
 }
 
