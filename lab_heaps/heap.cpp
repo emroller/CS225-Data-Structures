@@ -131,12 +131,13 @@ template <class T, class Compare>
 void heap<T, Compare>::updateElem(const size_t & idx, const T& elem)
 {
 	std::cout<<"here"<<std::endl;
-	if (idx == root()) return;
-
-	_elems[idx + root()] = elem;
-	for (unsigned int i = root(); i < _elems.size(); i++) {
-		heapifyDown(i);
-	}	
+	_elems[idx] = elem;
+	
+	if (higherPriority(elem, _elems[parent(idx)])) {
+		heapifyUp(idx);
+	} else {
+		heapifyDown(idx);
+	}
 
 }
 
