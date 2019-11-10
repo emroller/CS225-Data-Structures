@@ -3,6 +3,7 @@
  * @file heap.cpp
  * Implementation of a heap class.
  */
+#include <iostream>
 
 template <class T, class Compare>
 size_t heap<T, Compare>::root() const
@@ -40,6 +41,9 @@ template <class T, class Compare>
 size_t heap<T, Compare>::maxPriorityChild(size_t currentIdx) const
 {
 	if (hasAChild(currentIdx)) {
+		if(rightChild(currentIdx) >= _elems.size()){
+    	    return leftChild(currentIdx);
+     	}
 		return higherPriority(_elems[leftChild(currentIdx)], _elems[rightChild(currentIdx)]) ? leftChild(currentIdx) : rightChild(currentIdx);
 	}
 
@@ -56,10 +60,8 @@ void heap<T, Compare>::heapifyDown(size_t currentIdx)
 
 		// Only swap if the current element is greater than either of its children
 		if (higherPriority( _elems[childIndex], _elems[currentIdx])) {	
-			std::swap(_elems[currentIdx], _elems[childIndex]);
+			std::swap(_elems[childIndex],_elems[currentIdx]);
 			heapifyDown(childIndex);
-		//	_elems.at(currentIdx) = minChild;
-		//	_elems.at(childIndex) = elem;
 		}
 	}
 }
@@ -69,6 +71,7 @@ void heap<T, Compare>::heapifyUp(size_t currentIdx)
 {
     if (currentIdx == root())
         return;
+
     size_t parentIdx = parent(currentIdx);
     if (higherPriority(_elems[currentIdx], _elems[parentIdx])) {
         std::swap(_elems[currentIdx], _elems[parentIdx]);
@@ -79,6 +82,8 @@ void heap<T, Compare>::heapifyUp(size_t currentIdx)
 template <class T, class Compare>
 heap<T, Compare>::heap()
 {
+	// so that the root is at 1
+	_elems.push_back(T());	
 }
 
 template <class T, class Compare>
@@ -86,7 +91,7 @@ heap<T, Compare>::heap(const std::vector<T>& elems)
 {
 	_elems = elems;
 	_elems.insert(_elems.begin(), T());
-	for (size_t i = parent(elems.size() - 1); i > 0; i--) {
+	for (size_t i = _elems.size() - 1; i > 0; i--) {
 		heapifyDown(i);
 	}
 }
@@ -94,6 +99,7 @@ heap<T, Compare>::heap(const std::vector<T>& elems)
 template <class T, class Compare>
 T heap<T, Compare>::pop()
 {
+	if (_elems.size() == root()) return T();
 	/*
  	* Swap the last element(index i) for the root
  	* result=_elems[i]
@@ -101,17 +107,17 @@ T heap<T, Compare>::pop()
  	* HeapifyDown(root);
  	* Return result;
  	*/
-	T elem = _elems[1];
-	std::swap(_elems[1], _elems[_elems.size()-1]);
+	T elem = _elems[root()];
+	std::swap(_elems[root()], _elems[_elems.size()-1]);
 	_elems.pop_back();	
-	heapifyDown(1);
+	heapifyDown(root());
     return elem;
 }
 
 template <class T, class Compare>
 T heap<T, Compare>::peek() const
 {
-    return _elems[1];
+    return _elems[root()];
 }
 
 template <class T, class Compare>
@@ -124,13 +130,14 @@ void heap<T, Compare>::push(const T& elem)
 template <class T, class Compare>
 void heap<T, Compare>::updateElem(const size_t & idx, const T& elem)
 {
-    // Corrects the heap to remain as a valid heap even after update
-    if (idx > 0 && idx < _elems.size()) {
-		_elems[idx+1] = elem;
-		for (size_t i = 1; i < _elems.size(); i++) {
-			heapifyDown(i);
-		}		
-	}
+	std::cout<<"here"<<std::endl;
+	if (idx == root()) return;
+
+	_elems[idx + root()] = elem;
+	for (unsigned int i = root(); i < _elems.size(); i++) {
+		heapifyDown(i);
+	}	
+
 }
 
 
