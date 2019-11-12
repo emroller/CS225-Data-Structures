@@ -6,7 +6,7 @@ class DisjointSets {
 
 	public:
 
-		/* Creates n unconnected root nodes at the end of the vector. */
+		/* Creates num unconnected root nodes at the end of the vector. */
 		void addelements(int num);
 
 
@@ -33,5 +33,7 @@ class DisjointSets {
 		/* This function should return the number of nodes in the up-tree containing the element. */
 		int size(int elem);
 
+	private:
+		std::vector<int> set;
 
 };
