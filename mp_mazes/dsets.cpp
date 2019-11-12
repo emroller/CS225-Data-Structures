@@ -12,20 +12,36 @@ void DisjointSets::addelements(int num) {
 	
 int DisjointSets::find(int elem) {
 	// base case - find the root
-	if (set[elem] == -1) return elem;
+	if (set[elem] < 0) return elem;
 
-	int root = find(set[elem]);
-	set[elem] = root;
-	return root;	
+	return find(set[elem]);
 }
 
 
 void DisjointSets::setunion(int a, int b) {
 
+	while (set[a] >= 0) {
+		a = set[a];
+	}
+	while (set[b] >= 0) {
+		b = set[b];
+	}
+	int newSize = set[a] + set[b];
+
+	if (set[a] < set[b]) {
+		set[b] = a;
+		set[a] = newSize;
+	} else {
+		set[a] = b;
+		set[b] = newSize;
+	}
 }
 
 
 int DisjointSets::size(int elem) {
-	return -1;
+	while (set[elem] >= 0) {
+		elem = set[elem];
+	}
+	return set[elem] * -1;
 }
 
