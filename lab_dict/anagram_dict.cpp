@@ -10,10 +10,13 @@
 
 #include <algorithm> /* I wonder why this is included... */
 #include <fstream>
+#include <iostream>
 
 using std::string;
 using std::vector;
 using std::ifstream;
+using std::cout;
+using std::endl;
 
 /**
  * Constructs an AnagramDict from a filename with newline-separated
@@ -22,16 +25,32 @@ using std::ifstream;
  */
 AnagramDict::AnagramDict(const string& filename)
 {
-    /* Your code goes here! */
+	ifstream wordsFile(filename);
+    string word;
+    if (wordsFile.is_open()) {
+      while (getline(wordsFile, word)) {
+        string s = word;
+        sort(s.begin(), s.end());
+        dict[s].push_back(word);
+      }
+    }
+
 }
 
 /**
  * Constructs an AnagramDict from a vector of words.
  * @param words The vector of strings to be used as source words.
+ *
+ * std::map<std::string, std::vector<std::string>> dict;
  */
 AnagramDict::AnagramDict(const vector<string>& words)
 {
-    /* Your code goes here! */
+	for (string s : words) {
+		string key = s;
+		std::sort(key.begin(), key.end());
+		dict[key].push_back(s);
+		
+	}	
 }
 
 /**
@@ -42,8 +61,14 @@ AnagramDict::AnagramDict(const vector<string>& words)
  */
 vector<string> AnagramDict::get_anagrams(const string& word) const
 {
-    /* Your code goes here! */
-    return vector<string>();
+	string key = word;
+	std::sort(key.begin(), key.end());
+	auto lookup = dict.find(key);
+	if (lookup != dict.end()) {
+	return lookup->second;
+	} else {
+		return vector<string>();
+	}
 }
 
 /**
@@ -55,5 +80,12 @@ vector<string> AnagramDict::get_anagrams(const string& word) const
 vector<vector<string>> AnagramDict::get_all_anagrams() const
 {
     /* Your code goes here! */
-    return vector<vector<string>>();
+	vector<vector<string>> anagrams;
+    for(std::pair<std::string, std::vector<std::string>> key_val : dict){
+      if(key_val.second.size() > 1){
+        anagrams.push_back(key_val.second);
+      }
+    }
+    return anagrams;
 }
+
