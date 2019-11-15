@@ -90,5 +90,4 @@ bool PronounceDict::homophones(const string& word1, const string& word2) const
 	if (it1->second == it2->second) return true;
 
 	return false;
-    return true;
 }
