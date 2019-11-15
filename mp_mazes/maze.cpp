@@ -32,15 +32,14 @@ void SquareMaze::makeMaze(int width, int height) {
 	// for each point in the maze, determine the possible walls to break down
 	// choose a random direction
 	// join the corresponding points in the disjoint set
-	for (int point = 0; point < mazedim - 1; point++) {
+	for (pair<int ,int> point : points) {
 		if (canTravel(point.first, point.second, 0)) {
 
 		} else if (canTravel(point.first, point.second, 1)) {
 
 		} else if (canTravel(point.first, point.second, 2)) {
 
-`		} else if (canTravel(point.first, point.second, 3)) {
-
+		} else if (canTravel(point.first, point.second, 3)) {
 
 		}	
 	}
@@ -63,10 +62,12 @@ bool SquareMaze::canTravel(int x, int y, int dir) const {
  	/* dir = 2 represents a leftward step (-1 to the x coordinate) */
 		case 2:
 			if (x < 1) return false;
+			return !(track[x-1][y].right);
 
  	/* dir = 3 represents an upward step (-1 to the y coordinate) */
 		case 3:
 			if (y < 1) return false;
+			return !(track[x][y-1].down);
 
 	/* shouldn't get here? */
 		default: return false;

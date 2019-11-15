@@ -26,8 +26,8 @@ class SquareMaze {
 	// 2d vec of maze walls up
 	std::vector<std::vector<WallUp>> track;
 
-	// array of points visited
-//	std::vector<std::pair<int, int>> points;
+	// array of points representing the maze coordinates
+	std::vector<std::pair<int, int>> points;
 
 	// count of walls broken
 	int count_walls_broken = 0;

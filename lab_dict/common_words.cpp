@@ -98,8 +98,8 @@ vector<string> CommonWords::get_common_words(unsigned int n) const
 		
 			// for each file's word-count map
 			unsigned int count = 0;
-			for (map<string, unsigned int> map : file_word_maps) {
-				if (map.find(word.first)->second >= n)
+			for (unsigned int i = 0; i < file_word_maps.size(); i++) {
+				if (file_word_maps[i].find(word.first)->second >= n)
 					count++;
 			}
 			if (count == file_word_maps.size()) out.push_back(word.first);	
