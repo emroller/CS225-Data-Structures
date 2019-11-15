@@ -40,6 +40,7 @@ CommonWords::CommonWords(const vector<string>& filenames)
 void CommonWords::init_file_word_maps(const vector<string>& filenames)
 {
     // make the length of file_word_maps the same as the length of filenames
+    // vector<map<string, unsigned int>> file_word_maps;
     file_word_maps.resize(filenames.size());
 
     // go through all files
@@ -47,13 +48,40 @@ void CommonWords::init_file_word_maps(const vector<string>& filenames)
         // get the corresponding vector of words that represents the current
         // file
         vector<string> words = file_to_vector(filenames[i]);
-        /* Your code goes here! */
+		
+		// for each word in the file, add a pair to the map that corresponds to the current file
+		for (string s : words) {
+			// check if that word is already in the map
+			map<string, unsigned int> &curr_map = file_word_maps[i];
+			map<string, unsigned int>::iterator lookup = curr_map.find(s);
+			if (lookup == curr_map.end()) {
+				curr_map[s] = 1;
+			} else {
+				curr_map[s]++;
+			}
+		}
+			
     }
 }
 
+/* #common maps a word to the number of documents that word appears in
+std::map<std::string, unsigned int> common;
+*/
 void CommonWords::init_common()
 {
-    /* Your code goes here! */
+	// each map corresponds to a document
+	for (map<string, unsigned int> &doc : file_word_maps) {
+		for (std::pair<string, unsigned int> word : doc) {
+			// see if the word is already in common
+			map<string, unsigned int>::iterator lookup = common.find(word.first);
+			if (lookup == common.end()) {
+				common[word.first] = 1;
+			} else {
+				common[word.first]++;
+			}	
+		}
+
+	}
 }
 
 /**
@@ -64,7 +92,19 @@ void CommonWords::init_common()
 vector<string> CommonWords::get_common_words(unsigned int n) const
 {
     vector<string> out;
-    /* Your code goes here! */
+	for (std::pair<string, unsigned int> word : common) {
+		// only if the word is in each file
+		if (word.second == file_word_maps.size()) {
+		
+			// for each file's word-count map
+			unsigned int count = 0;
+			for (map<string, unsigned int> map : file_word_maps) {
+				if (map.find(word.first)->second >= n)
+					count++;
+			}
+			if (count == file_word_maps.size()) out.push_back(word.first);	
+		}
+	}
     return out;
 }
 
