@@ -30,7 +30,8 @@ using std::endl;
 NimLearner::NimLearner(unsigned startingTokens) : g_(true, true) {
 	startingVertex_ = "p1-" + std::to_string(startingTokens);
 	g_.insertVertex(startingVertex_);	
-	cout<<startingVertex_<<endl;
+
+	if (startingTokens > 1) {
 
 	Vertex prev1 = startingVertex_;
 	Vertex prev2 = "p2-" + std::to_string(startingTokens);
@@ -63,22 +64,7 @@ NimLearner::NimLearner(unsigned startingTokens) : g_(true, true) {
 		prev1 = v1;
 		prev2 = v2;
 	}	
-cout<<"---------------------"<<endl;
-	/**
-	for (int i = startingTokens - 1; i >= 0; i--) {
-		Vertex v1 = "p" + std::to_string(p) + "-" + std::to_string(i);
-		g_.insertVertex(v1);
-		g_.insertEdge(prev, v1);
-		if (i >1) {
-			Vertex v2= "p" + std::to_string(p) + "-" + std::to_string(i-1);
-			g_.insertVertex(v2);
-			g_.insertEdge(prev, v2);
-
-		}
-		//p = (p == 2) ? 1 : 2;
-		prev = v;
-	}
-	*/
+}
 }
 
 /**
@@ -91,9 +77,22 @@ cout<<"---------------------"<<endl;
  * @returns A random path through the state space graph.
  */
 std::vector<Edge> NimLearner::playRandomGame() const {
-  vector<Edge> path;
- /* Your code goes here! */
-  return path;
+    vector<Edge> path;
+	
+	Vertex curr = startingVertex_;
+	vector<Vertex> neighbors = g_.getAdjacent(curr);
+
+	if (neighbors.empty()) path.push_back(g_.getEdge(curr, curr));
+
+	while (!neighbors.empty() ) {
+		Vertex next = neighbors.size() == 1 ? neighbors[0] : neighbors[rand() %2];
+		path.push_back(g_.getEdge(curr, next));
+		curr = next;
+		neighbors = g_.getAdjacent(next);
+
+	}
+
+    return path;
 }
 
 /*
