@@ -1,48 +1,97 @@
-/* Your code here! */
 #include "maze.h"
-using std::vector;
-using std::pair;
+#include "cs225/PNG.h"
+#include "dsets.h"
+#include <vector>
+#include <cstdlib>
+#include <iostream>
+#include <stack>
+#include <queue>
+#include <utility>
 
-SquareMaze::SquareMaze() { 
+using namespace std;
+using namespace cs225;
+
+SquareMaze::SquareMaze() {
 	width_ = 0;
 	height_ = 0;
 	disjoint = new DisjointSets();
+	track = new vector<WallUp>;
+	
 }
 
+
 void SquareMaze::makeMaze(int width, int height) {
-	int mazedim = width * height;
-	// initialize maze with walls up
-	WallUp initialize_walls(true, true);
+	width_ = width;
+	height_ = height;
+	int mazedim = width_ * height_;
+	disjoint->addelements(width * height);
 
-	// a bunch of unconnected squares - all walls up
-	disjoint->addelements(mazedim);
+	for (int squares = 0; squares < mazedim; squares++)
+		track->push_back(WallUp(true, true));
 
-	// 2D track - all walls up, width x height
-	track = vector<vector<WallUp>> (width, vector<WallUp>(height, initialize_walls));
-	
-	// 2D grid of all the squares in the maze 
-	for (int i = 0; i < width; i++) {
-		for (int j = 0; j < height; j++) {
-			points.push_back(pair<int, int> (i, j));
-		}		
+	while ( edges !=  (width*height) - 1 )
+	{
+
+		int wall = rand() % (width*height);
+		int neighbor = rand() % 2;
+
+		if ( neighbor == 0 && findX (wall) != width-1 )
+		{
+			if ( D.find( wall ) != D.find( wall+1 ) )
+			{
+				setWall( findX( wall ), findY( wall ), 0, false );
+				D.setunion ( wall, wall + 1);
+				edges++;
+			}
+		}
+		else if ( neighbor == 1 && findY( wall ) != height -1 )
+		{
+			if ( D.find( wall ) != D.find( wall + width ) )
+			{
+				setWall( findX( wall ), findY( wall ), 1, false );
+				D.setunion( wall, wall + width );
+				edges++;
+			}
+		}
 	}
-	// shuffle all the points in the maze
-	random_shuffle(points.begin(), points.end());
 
-	// for each point in the maze, determine the possible walls to break down
-	// choose a random direction
-	// join the corresponding points in the disjoint set
-	for (pair<int ,int> point : points) {
-		if (canTravel(point.first, point.second, 0)) {
+/*
+	for (int i = 0; i < mazedim - 1; i++) {
+		vector<int> directions;
+		 if ( ((i + 1) % width_ != 0) && (disjoint->find(i) != disjoint->find(i+1)) ) {
+			directions.push_back(0);
+		}
+		if ( !(i >= (width_ * (height_ - 1))) &&
+			 (disjoint->find(i) != disjoint->find(i+width_)) ) {
+			directions.push_back(1);
+		}
+		if ( !(i % width_ == 0) &&
+			 (disjoint->find(i) != disjoint->find(i-1)) ) {
+			directions.push_back(2);
+		}
+		if ( !(i < width_) &&
+			 (disjoint->find(i) != disjoint->find(i-width_)) ) {
+			directions.push_back(3);
+		}
 
-		} else if (canTravel(point.first, point.second, 1)) {
+		if (directions.size() == 0) continue;
+		int direction = directions[rand() % directions.size()];
 
-		} else if (canTravel(point.first, point.second, 2)) {
-
-		} else if (canTravel(point.first, point.second, 3)) {
-
-		}	
+		if (direction == 0) {
+			disjoint->setunion(i, i+1);
+			(*track)[i].right = false; 
+		}else if (direction == 1) {
+			disjoint->setunion(i, i+width_);
+			(*track)[i].down = false;
+		}else if (direction == 2) {
+			disjoint->setunion(i, i-1);
+			(*track)[i-1].right = false;
+		}else if (direction == 3) {
+			disjoint->setunion(i, i-width_);
+			(*track)[i-width_].down = false;
+		}
 	}
+*/
 }
 
 bool SquareMaze::canTravel(int x, int y, int dir) const {
@@ -50,27 +99,30 @@ bool SquareMaze::canTravel(int x, int y, int dir) const {
  	/* dir = 0 represents a rightward step (+1 to the x coordinate) */
 		case 0:
 			// if we are at the rightmost edge
-			if (x > width_-2) return false;
+			if (x >= width_-1){ 
+				return false;
+			}
 			// otherwise see if there is a wall to the right
-			return !(track[x][y].right);
+			return !((*track)[x + y * width_].right);
 
  	/* dir = 1 represents a downward step (+1 to the y coordinate) */
 		case 1:
 			if (y > height_ - 2) return false;
-			return !(track[x][y].down);
+
+			return !((*track)[x + y * width_].down);
 
  	/* dir = 2 represents a leftward step (-1 to the x coordinate) */
 		case 2:
 			if (x < 1) return false;
-			return !(track[x-1][y].right);
+			return !((*track)[x-1 + y * width_].right);
 
  	/* dir = 3 represents an upward step (-1 to the y coordinate) */
 		case 3:
 			if (y < 1) return false;
-			return !(track[x][y-1].down);
+			return !((*track)[x+ (y-1) * width_].down);
+		default:
+			return false;
 
-	/* shouldn't get here? */
-		default: return false;
 	}
 }
 

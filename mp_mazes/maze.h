@@ -24,7 +24,7 @@ class SquareMaze {
 	DisjointSets* disjoint;
 	
 	// 2d vec of maze walls up
-	std::vector<std::vector<WallUp>> track;
+	std::vector<WallUp>* track;
 
 	// array of points representing the maze coordinates
 	std::vector<std::pair<int, int>> points;

@@ -6,7 +6,9 @@
 #include "NimLearner.h"
 #include <ctime>
 
-
+using std::string;
+using std::cout;
+using std::endl;
 /**
  * Constructor to create a game of Nim with `startingTokens` starting tokens.
  *
@@ -24,8 +26,59 @@
  *
  * @param startingTokens The number of starting tokens in the game of Nim.
  */
+// g_(true, true) -> g_ is weighted and directed
 NimLearner::NimLearner(unsigned startingTokens) : g_(true, true) {
-    /* Your code goes here! */
+	startingVertex_ = "p1-" + std::to_string(startingTokens);
+	g_.insertVertex(startingVertex_);	
+	cout<<startingVertex_<<endl;
+
+	Vertex prev1 = startingVertex_;
+	Vertex prev2 = "p2-" + std::to_string(startingTokens);
+
+	Vertex backprev1 = "";
+	Vertex backprev2 = "";
+
+	for (int i = startingTokens - 1; i >= 0; i--) {
+		Vertex v1 = "p1-" + std::to_string(i);
+		Vertex v2 = "p2-" + std::to_string(i);
+		g_.insertVertex(v1);
+		g_.insertVertex(v2);
+
+		g_.insertEdge(prev1, v2);
+		g_.insertEdge(prev2, v1);
+
+		if ((unsigned)i == startingTokens - 1) {
+			backprev1 = prev1;
+			backprev2 = prev2;
+
+		} else {
+			g_.insertEdge(backprev1, v2);
+			g_.insertEdge(backprev2, v1);
+
+			backprev1 = prev1;
+			backprev2 = prev2;
+
+		}
+
+		prev1 = v1;
+		prev2 = v2;
+	}	
+cout<<"---------------------"<<endl;
+	/**
+	for (int i = startingTokens - 1; i >= 0; i--) {
+		Vertex v1 = "p" + std::to_string(p) + "-" + std::to_string(i);
+		g_.insertVertex(v1);
+		g_.insertEdge(prev, v1);
+		if (i >1) {
+			Vertex v2= "p" + std::to_string(p) + "-" + std::to_string(i-1);
+			g_.insertVertex(v2);
+			g_.insertEdge(prev, v2);
+
+		}
+		//p = (p == 2) ? 1 : 2;
+		prev = v;
+	}
+	*/
 }
 
 /**
