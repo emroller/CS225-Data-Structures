@@ -25,8 +25,11 @@ unsigned int Graph<V,E>::numVertices() const {
 template <class V, class E>
 unsigned int Graph<V,E>::degree(const V & v) const {
 	unsigned int degree = 0;
-	for (auto it = adjList.begin(); it != adjList.end(); it++) {
-		cout<<it->first<<endl;
+	for (auto it = edgeList.begin(); it != edgeList.end(); it++) {
+		E& e = (*it).get();
+		string check = e.source().key();
+		string destination = e.dest().key();
+		if (check == v.key() || destination == v.key()) degree++;
 	}
 	return degree;
 }
@@ -89,8 +92,7 @@ E & Graph<V,E>::insertEdge(const V & v1, const V & v2) {
 	edgeList.insert(edgeList.end(), e);
 
 	std::list<edgeListIter> l = adjList.at(v1.key());
-	// TODO: how to construct an edgeListIter from an edge ref?
-	l.insert(l.end(), edgeListIter());
+	l.insert(l.end(), --edgeList.end());
 
 
   return e;
@@ -147,8 +149,14 @@ void Graph<V,E>::removeEdge(const edgeListIter & it) {
 */
 template <class V, class E>  
 const std::list<std::reference_wrapper<E>> Graph<V,E>::incidentEdges(const std::string key) const {
-  // TODO: Part 2
   std::list<std::reference_wrapper<E>> edges;
+	for (auto it = edgeList.begin(); it != edgeList.end(); it++) {
+		E& e = (*it).get();
+		string check = e.source().key();
+		string destination = e.dest().key();
+		if (key == check || key == destination) edges.push_back(e);
+
+	}
   return edges;
 }
 
