@@ -194,12 +194,14 @@ bool Graph<V,E>::isAdjacent(const std::string key1, const std::string key2) cons
 */	
 	std::list<edgeListIter> l = adjList.at(key1);
 
+	if (l.empty() && adjList.at(key2).empty()) { cout<<"a;lskdf"<<endl; return false;}
+
 	for (auto it = l.begin(); it != l.end(); ++it) {
 		E& e = (*it)->get();
 		if (e.directed()) {
 			if (e.source().key() == key1 && e.dest().key() == key2) return true;
 		} else {
-			if (e.dest().key() == key2 || isAdjacent(key2, key1)) return true;
+			if ((e.source().key() == key1 && e.dest().key() == key2) || isAdjacent(key2, key1)) return true;
 		}
 		
 	}

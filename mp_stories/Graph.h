@@ -4,6 +4,7 @@
 #include <unordered_map>
 #include <string>
 #include <algorithm>
+#include <vector>
 #include <functional>
 
 #include "Edge.h"
@@ -48,6 +49,8 @@ class Graph {
 
     // Graph algorithm:
     std::list<std::string> shortestPath(const std::string start, const std::string end);
+
+	std::vector<std::list<std::string>> findPaths( const std::string start, const std::string end);
 
     // stream<< printer
     friend std::ostream & operator<<(std::ostream & out, const Graph<V,E> & g) {
