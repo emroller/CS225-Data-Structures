@@ -25,7 +25,7 @@ unsigned int Graph<V,E>::numVertices() const {
 template <class V, class E>
 unsigned int Graph<V,E>::degree(const V & v) const {
 	unsigned int degree = 0;
-	for (auto it = edgeList.begin(); it != edgeList.end(); it++) {
+	for (auto it = edgeList.begin(); it != edgeList.end(); ++it) {
 		E& e = (*it).get();
 		string check = e.source().key();
 		string destination = e.dest().key();
@@ -59,14 +59,14 @@ void Graph<V,E>::removeVertex(const std::string & key) {
 	vertexMap.erase(vertexMap.find(key));	
 
 	// remove ingoing and outgoing edges
-	for (auto it = edgeList.begin(); it != edgeList.end(); it++) {
+	for (auto it = edgeList.begin(); it != edgeList.end(); ++it) {
 		if (it->get().dest().key() == key || it->get().source().key() == key) {
 			edgeList.erase(it);
 		}	
 	}	
 
 	// remove the node and its list of adjacencies from the adjList
-	for (auto it = adjList.begin(); it != adjList.end(); it++) {
+	for (auto it = adjList.begin(); it != adjList.end(); ++it) {
 		if (it->first == key) {
 			adjList.erase(it);
 		} else {
@@ -89,13 +89,11 @@ void Graph<V,E>::removeVertex(const std::string & key) {
 template <class V, class E>
 E & Graph<V,E>::insertEdge(const V & v1, const V & v2) {
     E & e = *(new E(v1, v2));
-	edgeList.insert(edgeList.end(), e);
+	edgeListIter it = edgeList.insert(edgeList.end(), e);
 
-	std::list<edgeListIter> l = adjList.at(v1.key());
-	l.insert(l.end(), --edgeList.end());
-
-
-  return e;
+	std::list<edgeListIter> & l = adjList.at(v1.key());
+	l.insert(l.begin(), it);
+  	return e;
 }
 
 
@@ -107,7 +105,9 @@ E & Graph<V,E>::insertEdge(const V & v1, const V & v2) {
 */
 template <class V, class E>
 void Graph<V,E>::removeEdge(const std::string key1, const std::string key2) {  
-	for (auto it = edgeList.begin(); it != edgeList.end(); it++) {
+	//cout<<"removing edge from "<<key1 << " " << key2<<endl;
+
+	for (auto it = edgeList.begin(); it != edgeList.end(); ++it) {
 		if (it->get().directed()) {
 			if (it->get().source().key() == key1 && it->get().dest().key() == key2) {
 				edgeList.erase(it);
@@ -120,11 +120,23 @@ void Graph<V,E>::removeEdge(const std::string key1, const std::string key2) {
 		}
 	}
 
-	
-	for (auto it = adjList.begin(); it != adjList.end(); it++) {
-		
+	std::list<edgeListIter>& l = adjList.at(key1);
+	for (auto e = l.begin(); e != l.end(); e++) {
+		Edge& edge = (*e)->get();
+		if (edge.directed()) {
+			if (edge.source().key() == key1 && edge.dest().key() == key2) {
+//			cout<<"removing "<<edge.source().key()<<"->"<<edge.dest().key()<<endl;
+				l.erase(e);
+			}
 
+		} else {
+			if ((edge.source().key() == key1 && edge.dest().key() == key2) || 
+				(edge.source().key() == key2 && edge.dest().key() == key1)) {
+				l.erase(e);
+			}
+		}
 	}
+	
 }
 
 
@@ -135,7 +147,7 @@ void Graph<V,E>::removeEdge(const std::string key1, const std::string key2) {
 */
 template <class V, class E>
 void Graph<V,E>::removeEdge(const edgeListIter & it) {
-	for (auto itr = adjList.begin(); itr != adjList.end(); itr++) {
+	for (auto itr = adjList.begin(); itr != adjList.end(); ++itr) {
 		if (itr->second == it) adjList.erase(it);
 	}
 }
@@ -150,7 +162,7 @@ void Graph<V,E>::removeEdge(const edgeListIter & it) {
 template <class V, class E>  
 const std::list<std::reference_wrapper<E>> Graph<V,E>::incidentEdges(const std::string key) const {
   std::list<std::reference_wrapper<E>> edges;
-	for (auto it = edgeList.begin(); it != edgeList.end(); it++) {
+	for (auto it = edgeList.begin(); it != edgeList.end(); ++it) {
 		E& e = (*it).get();
 		string check = e.source().key();
 		string destination = e.dest().key();
@@ -170,6 +182,28 @@ const std::list<std::reference_wrapper<E>> Graph<V,E>::incidentEdges(const std::
 */
 template <class V, class E>
 bool Graph<V,E>::isAdjacent(const std::string key1, const std::string key2) const {
-  // TODO: Part 2
-  return false;
+/*
+	for (auto it = adjList.begin(); it != adjList.end(); it++) {
+		cout<<it->first<< " [ ";
+		for (auto i = it->second.begin(); i != it->second.end(); i++) {
+			cout<<(*i)->get()<<" ";
+		}
+		cout<<"]"<<endl;
+	}
+	
+*/	
+	std::list<edgeListIter> l = adjList.at(key1);
+
+	for (auto it = l.begin(); it != l.end(); ++it) {
+		E& e = (*it)->get();
+		if (e.directed()) {
+			if (e.source().key() == key1 && e.dest().key() == key2) return true;
+		} else {
+			if (e.dest().key() == key2 || isAdjacent(key2, key1)) return true;
+		}
+		
+	}
+
+	return false;	
+
 }
