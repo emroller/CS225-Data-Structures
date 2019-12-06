@@ -20,8 +20,20 @@ int min(int a, int b) {
 
 NetworkFlow::NetworkFlow(Graph & startingGraph, Vertex source, Vertex sink) :
   g_(startingGraph), residual_(Graph(true,true)), flow_(Graph(true,true)), source_(source), sink_(sink) {
-
-  // YOUR CODE HERE
+	for (Vertex v : startingGraph.getVertices()) {
+		residual_.insertVertex(v);
+		flow_.insertVertex(v);
+	}
+	for (Edge e : startingGraph.getEdges()) {
+		residual_.insertEdge(e.source, e.dest);
+		residual_.setEdgeWeight(e.source, e.dest, e.getWeight());
+		residual_.insertEdge(e.dest, e.source);
+		residual_.setEdgeWeight(e.dest, e.source, 0);
+		flow_.insertEdge(e.source, e.dest);
+		flow_.setEdgeWeight(e.source, e.dest, 0);
+	}
+	maxFlow_ = 0;
+	
 }
 
   /**
@@ -83,8 +95,12 @@ bool NetworkFlow::findAugmentingPath(Vertex source, Vertex sink, std::vector<Ver
    */
 
 int NetworkFlow::pathCapacity(const std::vector<Vertex> & path) const {
-  // YOUR CODE HERE
-  return 0;
+	int c = residual_.getEdge(path[0], path[1]).getWeight();
+	for (unsigned int i = 0; i < path.size()-1; i++) {
+		Edge e = residual_.getEdge(path[i], path[i+1]);
+		if (e.getWeight() < c) c = e.getWeight();
+	}
+	return c;
 }
 
   /**
@@ -96,8 +112,40 @@ int NetworkFlow::pathCapacity(const std::vector<Vertex> & path) const {
    */
 
 const Graph & NetworkFlow::calculateFlow() {
-  // YOUR CODE HERE
-  return flow_;
+vector<Vertex> path;
+    int path_cap;
+
+    while (findAugmentingPath(source_, sink_, path)) {
+        path_cap = pathCapacity(path);
+        maxFlow_ += path_cap;
+
+        for (unsigned i = 1; i < path.size(); i++) {
+            if (flow_.edgeExists(path[i-1], path[i])) {
+                flow_.setEdgeWeight(
+                    path[i-1],
+                    path[i],
+                    flow_.getEdgeWeight(path[i-1], path[i]) + path_cap
+                );
+            } else {
+                flow_.setEdgeWeight(
+                    path[i],
+                    path[i-1],
+                    flow_.getEdgeWeight(path[i], path[i-1]) - path_cap      
+                ); 
+            }
+            residual_.setEdgeWeight(
+                path[i-1],
+                path[i],
+                residual_.getEdgeWeight(path[i-1], path[i]) - path_cap      
+            );            
+            residual_.setEdgeWeight(
+                path[i],
+                path[i-1],
+                residual_.getEdgeWeight(path[i-1], path[i]) + path_cap      
+            ); 
+        }
+    }
+    return flow_;
 }
 
 int NetworkFlow::getMaxFlow() const {
