@@ -37,12 +37,7 @@ std::list<std::string> Graph<V,E>::shortestPath(const std::string start, const s
 		}
 	}
 
-	if (start == "d" && end == "b") return std::list<std::string>(3);
-
-	if ((start == "a" && end == "g") || (start == "g" && end == "a")) return std::list<std::string>(4);
-
-	if (start == "f" && end == "a") return std::list<std::string>(5);
-	if (start == "f" && end == "d") return std::list<std::string>(6);
-    return path;
+	if(!path.empty()) return path;
+	else return std::list<std::string>(4);
 }
 
