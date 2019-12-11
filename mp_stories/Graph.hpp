@@ -93,6 +93,11 @@ E & Graph<V,E>::insertEdge(const V & v1, const V & v2) {
 
 	std::list<edgeListIter> & l = adjList.at(v1.key());
 	l.insert(l.begin(), it);
+	
+	if (!e.directed())	{
+	std::list<edgeListIter> & l2 = adjList.at(v2.key());
+	l2.insert(l2.begin(), it);
+	}
   	return e;
 }
 
@@ -107,34 +112,31 @@ template <class V, class E>
 void Graph<V,E>::removeEdge(const std::string key1, const std::string key2) {  
 	//cout<<"removing edge from "<<key1 << " " << key2<<endl;
 
-	for (auto it = edgeList.begin(); it != edgeList.end(); ++it) {
-		if (it->get().directed()) {
-			if (it->get().source().key() == key1 && it->get().dest().key() == key2) {
-				edgeList.erase(it);
-			}
-		} else {
-			if ((it->get().source().key() == key1 && it->get().dest().key() == key2) ||
-				(it->get().source().key() == key2 && it->get().dest().key() == key1)) {
-				edgeList.erase(it);
-			}
-		}
-	}
+	Edge e(key1, key2);
 
 	std::list<edgeListIter>& l = adjList.at(key1);
-	for (auto e = l.begin(); e != l.end(); e++) {
-		Edge& edge = (*e)->get();
-		if (edge.directed()) {
-			if (edge.source().key() == key1 && edge.dest().key() == key2) {
-//			cout<<"removing "<<edge.source().key()<<"->"<<edge.dest().key()<<endl;
-				l.erase(e);
-			}
+	for (auto it = l.begin(); it != l.end(); it++) {
+		if ((*it)->get() == e) {
+			l.erase(it);
+			break;
+		}	
+	}
 
-		} else {
-			if ((edge.source().key() == key1 && edge.dest().key() == key2) || 
-				(edge.source().key() == key2 && edge.dest().key() == key1)) {
-				l.erase(e);
-			}
-		}
+	std::list<edgeListIter>& l2 = adjList.at(key2);
+	if (!e.directed()) {
+		for (auto it = l2.begin(); it != l2.end(); it++) {
+		if ((*it)->get() == e) {
+			l2.erase(it);
+			break;
+		}	
+	}
+
+	}
+	for (auto it = edgeList.begin(); it != edgeList.end(); ++it) {
+		if (it->get() == e) {
+			edgeList.erase(it);
+			break;
+		}	
 	}
 	
 }
@@ -201,7 +203,7 @@ bool Graph<V,E>::isAdjacent(const std::string key1, const std::string key2) cons
 		if (e.directed()) {
 			if (e.source().key() == key1 && e.dest().key() == key2) return true;
 		} else {
-			if ((e.source().key() == key1 && e.dest().key() == key2) || isAdjacent(key2, key1)) return true;
+			if ((e.source().key() == key1 && e.dest().key() == key2) || (e.dest().key() == key1 && e.source().key() == key2)) return true;
 		}
 		
 	}

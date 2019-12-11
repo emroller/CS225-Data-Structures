@@ -2,9 +2,12 @@
 #include <algorithm>
 #include <string>
 #include <list>
+#include <map>
 using std::string;
 using std::vector;
 using std::list;
+using std::pair;
+using std::map;
 
 /**
  * Returns an std::list of vertex keys that creates any shortest path between `start` and `end`.
@@ -22,22 +25,70 @@ using std::list;
  */
 template <class V, class E>
 std::list<std::string> Graph<V,E>::shortestPath(const std::string start, const std::string end) {
-  // TODO: Part 3
-  std::list<std::string> path;
-	
+    std::list<std::string> path;
+    std::queue<string> bfs;
+	map<string, string> predecessor;
+	map<string, int> distance;
+
 	for (auto it = edgeList.begin(); it != edgeList.end(); it++) {
-		/**
- 		 *  if there is an edge between the two vertices, that's the shortest path
- 		 *  do nothing else
- 		 */ 
 		if ((it->get().source().key() == start && it->get().dest().key() == end) || 
 			(it->get().source().key() == end && it->get().dest().key() == start)) {
 			path.push_back(start);
 			path.push_back(end);
-		}
+			return path;
+		}	
+
 	}
 
-	if(!path.empty()) return path;
-	else return std::list<std::string>(4);
+	for (auto it = vertexMap.begin(); it != vertexMap.end(); it++) {
+		predecessor.insert(pair<string, string> (it->first, "N"));
+		distance.insert(pair<string, int> (it->first, -1));
+	}
+
+
+
+	distance[start] = 0;
+
+	predecessor[start] = "S";
+
+	bfs.push(start);
+
+	while (!bfs.empty()) {
+		Vertex v = bfs.front();
+		bfs.pop();
+
+		list<string> neighbors;
+
+		list<edgeListIter> n = adjList[v.key()];
+		for (edgeListIter edge : n) {
+			if (edge->get().source().key() == v.key()) neighbors.push_back(edge->get().dest().key());
+			else neighbors.push_back(edge->get().source().key());
+		}
+
+
+		for (string neighbor : neighbors) {
+			
+			if (distance[neighbor]== -1) {
+				distance[neighbor] = distance[v.key()] + 1;
+				predecessor[neighbor] = v.key();
+				bfs.push(neighbor);
+
+			}
+			
+		}
+
+	}
+
+	string current = end;
+	path.push_back(current);
+
+	while (current != start) {
+		current = predecessor[current];
+		path.push_back(current);
+
+	}
+	
+    return path;
 }
+
 
